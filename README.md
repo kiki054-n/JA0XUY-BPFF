@@ -111,7 +111,8 @@ JA0XUY-BPFF/
 ├── references/
 │   └── equations.md      参照する方程式と出典
 ├── hypotheses/
-│   └── bpff.md           作業仮説の本文と改訂履歴
+│   ├── bpff.md           作業仮説の本文と改訂履歴
+│   └── genesis-principle.md  宇宙と空間の創生原理（2026-11-06）
 ├── logs/
 │   └── 2026-11-05.md     検討記録（日付ごと）
 └── verify/
