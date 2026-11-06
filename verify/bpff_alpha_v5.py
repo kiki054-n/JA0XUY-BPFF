@@ -37,6 +37,21 @@ def main():
         d = float(V5) - v
         print(f"  {k:<24} 差 {d:+.2e} = {d/s:+.1f}σ")
 
+    section("1b. V1〜V5 の経緯")
+    versions = {
+        "V1・V2": F(137) + F(23, 640),
+        "V3": F(137) + F(23, 640) + F(1, 128**2),
+        "V4": F(137) + F(23, 640) + F(1, 128**2) + F(23, 20) / 128**3,
+        "V5": V5,
+    }
+    c18, s18 = MEAS["CODATA 2018"]
+    c22, s22 = MEAS["CODATA 2022"]
+    for k, v in versions.items():
+        x = float(v)
+        print(f"  {k:<7} {x:.10f}  2018 {(x-c18)/s18:+8.1f}σ  2022 {(x-c22)/s22:+8.1f}σ")
+    print(f"  V4 − V5 = {float(versions['V4'] - V5):+.3e}")
+    print(f"  V4 の係数（残差から）= {(c18 - float(versions['V3'])) * 128**3:.4f} → 23/20 に丸め")
+
     section("2. 偶然確率（形 137+(a·b)/(c·d)−1/(e·f·g)、語彙18語）")
     P2 = sorted({a * b for a in VOCAB for b in VOCAB})
     P3 = sorted({a * b * c for a in VOCAB for b in VOCAB for c in VOCAB})
