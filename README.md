@@ -115,6 +115,7 @@ $$w(a) = w_0 + w_a(1-a)$$
   - 途中にある割合の2乗に比例する場合：約 $10^{61}$ 単位時間
 - 完成した真空の単位胞が崩壊と誕生を起こすのはどんなときか、それがまれなのはなぜか。
 - T1〜T5（発生期）の速い崩壊と誕生と、現在の真空のまれな崩壊と誕生との関係。
+- 境界の圧力 34/(6L²)（2026-11-08、今の値 8.7×10⁻¹²²）は桁で観測と合うが、ケースC（粒子地平線）と同じ構造で加速しない。p = −ρ を保つ境界との出入りを導けるか。計算は [TUB-TMCC docs/25](https://github.com/kiki054-n/tub-tmcc/blob/main/docs/25-time-boundary/25-time-boundary-pressure.md)、エッセイは [`essays/2026-11-08-answer-is-not-the-answer.md`](essays/2026-11-08-answer-is-not-the-answer.md)。
 
 ---
 
@@ -133,6 +134,8 @@ JA0XUY-BPFF/
 │   ├── 2026-11-05.md     検討記録（日付ごと）
 │   ├── 2026-11-06.md
 │   └── 2026-11-07.md
+├── essays/
+│   └── 2026-11-08-answer-is-not-the-answer.md  今出す答えは、答えじゃない（時間軸・境界・圧力34）
 └── verify/
     ├── bpff_check.py         仮説1〜7の数値検証
     ├── bpff_boundary_w.py    境界層からの w₀・wₐ と DESI DR2 の比較
