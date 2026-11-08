@@ -135,7 +135,8 @@ JA0XUY-BPFF/
 │   ├── 2026-11-06.md
 │   └── 2026-11-07.md
 ├── essays/
-│   └── 2026-11-08-answer-is-not-the-answer.md  今出す答えは、答えじゃない（時間軸・境界・圧力34）
+│   ├── 2026-11-08-answer-is-not-the-answer.md  今出す答えは、答えじゃない（時間軸・境界・圧力34）
+│   └── 2026-11-08-hinoki-y.md  卑猥なヒノキ ― 連想ゲームの夜（H・Y・オリオンと犬・誕生の10）
 └── verify/
     ├── bpff_check.py         仮説1〜7の数値検証
     ├── bpff_boundary_w.py    境界層からの w₀・wₐ と DESI DR2 の比較
