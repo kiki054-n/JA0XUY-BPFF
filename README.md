@@ -126,8 +126,10 @@ $$w(a) = w_0 + w_a(1-a)$$
 JA0XUY-BPFF/
 ├── README.md
 ├── LICENSE
+├── index.html            Web ページ：Toward a First Principle（行動計画と指針）
 ├── references/
-│   └── equations.md      参照する方程式と出典
+│   ├── equations.md      参照する方程式と出典
+│   └── first-principle-three-layers.html  参照：第一原理の三層と丸めるの四則演算（旧 index.html）
 ├── hypotheses/
 │   ├── bpff.md           作業仮説の本文と改訂履歴
 │   └── genesis-principle.md  宇宙と空間の創生原理（2026-11-06）

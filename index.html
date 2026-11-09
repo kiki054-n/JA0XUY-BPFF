@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>第一原理の三層と丸めるの四則演算 ― TTT理論</title>
+<title>Toward a First Principle ― JA0XUY-BPFF</title>
+<meta name="description" content="JA0XUY-BPFF の行動計画と指針。第一原理への接近、羅針盤となる事象、螺旋の発展計画。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -13,578 +14,322 @@
   --ink: #1a1a1a;
   --muted: #6b6560;
   --accent: #b23a2e;
-  --accent-weak: color-mix(in oklab, var(--accent) 10%, var(--surface));
-  --line: color-mix(in oklab, var(--ink) 10%, transparent);
-  --step-0: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
-  --step-1: clamp(1.15rem, 1.05rem + 0.5vw, 1.4rem);
-  --step-2: clamp(1.5rem, 1.3rem + 1vw, 2rem);
-  --step-3: clamp(2rem, 1.6rem + 2vw, 3rem);
-  --step-4: clamp(2.5rem, 2rem + 2.5vw, 4rem);
-  --space: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);
+  --accent-weak: #f6e9e4;
+  --a: #2f6b4f;
+  --a-weak: #e5efe8;
+  --b: #9a6a12;
+  --b-weak: #f5ecd9;
+  --c: #5b5f8a;
+  --c-weak: #e8e9f2;
+  --line: rgba(26,26,26,0.1);
+  --step-0: clamp(1rem, 0.95rem + 0.3vw, 1.1rem);
+  --step-1: clamp(1.15rem, 1.05rem + 0.5vw, 1.35rem);
+  --step-2: clamp(1.45rem, 1.25rem + 1vw, 1.9rem);
+  --step-4: clamp(2.3rem, 1.8rem + 2.5vw, 3.6rem);
+  --space: clamp(1.25rem, 1rem + 1.5vw, 2.25rem);
   --radius: 12px;
   --shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px -12px rgba(0,0,0,0.15);
+  --serif: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
 }
-
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
-html {
-  scroll-behavior: smooth;
-}
-
+html { scroll-behavior: smooth; }
 body {
   font-family: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
-  font-size: var(--step-0);
-  line-height: 1.85;
-  color: var(--ink);
-  background: var(--bg);
-  word-break: normal;
+  font-size: var(--step-0); line-height: 1.85; color: var(--ink); background: var(--bg);
   overflow-wrap: anywhere;
 }
+a { color: var(--accent); }
+a:hover { text-decoration-thickness: 2px; }
+
+/* Nav */
+nav.top {
+  position: sticky; top: 0; z-index: 10; background: rgba(247,243,236,0.92);
+  backdrop-filter: blur(6px); border-bottom: 1px solid var(--line);
+}
+nav.top ul { list-style: none; display: flex; gap: 1.25rem; justify-content: center; flex-wrap: wrap;
+  padding: 0.6rem var(--space); font-size: 0.85rem; letter-spacing: 0.05em; }
+nav.top a { color: var(--muted); text-decoration: none; }
+nav.top a:hover { color: var(--accent); }
 
 /* Hero */
-.hero {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: var(--space);
-  position: relative;
-  overflow: hidden;
+.hero { text-align: center; padding: calc(var(--space) * 3) var(--space) calc(var(--space) * 2); }
+.eyebrow { font-size: 0.8rem; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; margin-bottom: 1rem; }
+.hero h1 { font-family: var(--serif); font-size: var(--step-4); line-height: 1.25; margin-bottom: 0.75rem; }
+.hero .sub { font-family: var(--serif); font-size: var(--step-1); color: var(--muted); margin-bottom: 2rem; }
+.principle {
+  max-width: 640px; margin: 0 auto; background: var(--surface); border: 1px solid var(--line);
+  border-top: 3px solid var(--accent); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 1.5rem 1.75rem; font-family: var(--serif); font-size: var(--step-1); line-height: 1.7;
 }
-
-.hero::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 60vmin;
-  height: 60vmin;
-  transform: translate(-50%, -50%);
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  opacity: 0.6;
-  animation: pulse 8s ease-in-out infinite;
-}
-
-.hero::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 40vmin;
-  height: 40vmin;
-  transform: translate(-50%, -50%) rotate(45deg);
-  border: 1px solid var(--line);
-  opacity: 0.4;
-  animation: rotate 60s linear infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
-  50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.3; }
-}
-
-@keyframes rotate {
-  from { transform: translate(-50%, -50%) rotate(0deg); }
-  to { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-.hero-content {
-  position: relative;
-  z-index: 1;
-  max-width: 720px;
-}
-
-.hero-eyebrow {
-  font-size: 0.85rem;
-  letter-spacing: 0.15em;
-  color: var(--muted);
-  margin-bottom: 1.5rem;
-  text-transform: uppercase;
-}
-
-.hero h1 {
-  font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
-  font-size: var(--step-4);
-  font-weight: 700;
-  line-height: 1.3;
-  letter-spacing: 0.02em;
-  margin-bottom: 1.5rem;
-}
-
-.hero-subtitle {
-  font-family: "Noto Serif JP", serif;
-  font-size: var(--step-1);
-  color: var(--muted);
-  font-weight: 400;
-  margin-bottom: 2rem;
-}
-
-.hero-quote {
-  font-family: "Noto Serif JP", serif;
-  font-size: var(--step-2);
-  color: var(--accent);
-  font-weight: 600;
-  margin-top: 2rem;
-  opacity: 0;
-  animation: fadeIn 1.5s ease 0.5s forwards;
-}
-
-@keyframes fadeIn {
-  to { opacity: 1; }
-}
-
-.scroll-hint {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  color: var(--muted);
-  font-size: 0.8rem;
-  letter-spacing: 0.1em;
-  animation: bounce 2s ease infinite;
-}
-
-@keyframes bounce {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(6px); }
-}
+.principle small { display: block; font-family: "Noto Sans JP", sans-serif; font-size: 0.8rem; color: var(--muted); margin-top: 0.75rem; }
 
 /* Layout */
-main {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 0 var(--space);
-}
+main { max-width: 760px; margin: 0 auto; padding: 0 var(--space) calc(var(--space) * 2); }
+section { margin-top: calc(var(--space) * 2.5); scroll-margin-top: 4rem; }
+.num { font-family: var(--serif); font-size: 0.8rem; color: var(--accent); letter-spacing: 0.12em; }
+h2 { font-family: var(--serif); font-size: var(--step-2); line-height: 1.4; margin: 0.25rem 0 1.25rem;
+  padding-bottom: 0.6rem; border-bottom: 1px solid var(--line); }
+h3 { font-family: var(--serif); font-size: var(--step-1); margin: 1.5rem 0 0.6rem; }
+p { margin-bottom: 1rem; }
+.lead { color: var(--muted); }
 
-section {
-  margin-bottom: calc(var(--space) * 2.5);
-}
+/* Strength legend */
+.legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin: 1rem 0; }
+.legend div { border-radius: var(--radius); padding: 0.9rem 1rem; font-size: 0.92rem; }
+.tag { display: inline-block; font-weight: 600; font-size: 0.78rem; padding: 0.05em 0.55em; border-radius: 999px; margin-right: 0.35em; }
+.ta { background: var(--a-weak); color: var(--a); }
+.tb { background: var(--b-weak); color: var(--b); }
+.tc { background: var(--c-weak); color: var(--c); }
+.legend .ta, .legend .tb, .legend .tc { display: block; }
 
-.section-number {
-  font-family: "Noto Serif JP", serif;
-  font-size: 0.8rem;
-  color: var(--accent);
-  letter-spacing: 0.1em;
-  margin-bottom: 0.5rem;
-}
+/* Guides */
+ol.guides { list-style: none; counter-reset: g; display: grid; gap: 0.75rem; }
+ol.guides li { counter-increment: g; background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 1rem 1.25rem 1rem 3.25rem; position: relative; box-shadow: var(--shadow); }
+ol.guides li::before { content: counter(g); position: absolute; left: 1.1rem; top: 0.95rem;
+  font-family: var(--serif); font-weight: 700; color: var(--accent); font-size: 1.2rem; }
+ol.guides strong { font-family: var(--serif); }
 
-h2 {
-  font-family: "Noto Serif JP", serif;
-  font-size: var(--step-2);
-  font-weight: 700;
-  line-height: 1.4;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--line);
-}
+/* Spiral */
+.spiral-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 1rem; margin: 1rem 0 1.5rem; }
+.spiral-wrap svg { width: 100%; height: auto; display: block; }
+.rounds { display: grid; gap: 1rem; }
+.round { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0; padding: 1.1rem 1.35rem; box-shadow: var(--shadow); }
+.round h3 { margin-top: 0; }
+.round h3 span { font-size: 0.8rem; color: var(--muted); font-family: "Noto Sans JP", sans-serif; margin-left: 0.5rem; }
+.round ul { list-style: none; display: grid; gap: 0.4rem; font-size: 0.95rem; }
+.round li { padding-left: 1.4rem; position: relative; }
+.round li::before { content: "○"; position: absolute; left: 0; color: var(--muted); }
+.round li.done::before { content: "●"; color: var(--a); }
+.round .goal { margin-top: 0.7rem; font-size: 0.88rem; color: var(--muted); }
 
-h3 {
-  font-family: "Noto Serif JP", serif;
-  font-size: var(--step-1);
-  font-weight: 600;
-  margin-top: 1.5rem;
-  margin-bottom: 0.75rem;
-  color: var(--ink);
-}
+/* Tables */
+.table-wrap { overflow-x: auto; margin: 0.75rem 0 1.25rem; }
+table { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: var(--radius);
+  overflow: hidden; box-shadow: var(--shadow); font-size: 0.92rem; }
+th, td { text-align: left; padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--serif); background: #f1ece3; font-weight: 600; white-space: nowrap; }
+tr:last-child td { border-bottom: none; }
+td.s { white-space: nowrap; }
 
-p {
-  margin-bottom: 1.2rem;
-}
+/* Math */
+.math .cf { white-space: nowrap; display: inline-block; }
+.math { font-family: "Times New Roman", var(--serif); background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 1.1rem; text-align: center; font-size: 1.15rem; margin: 1rem 0; }
+.frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; font-size: 0.9em; margin: 0 0.15em; }
+.frac > span:first-child { border-bottom: 1px solid var(--ink); padding: 0 0.2em; }
 
-/* Cards */
-.card {
-  background: var(--surface);
-  border-radius: var(--radius);
-  padding: calc(var(--space) * 1.2);
-  margin-bottom: 1.5rem;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--line);
-}
+/* Status */
+.status { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 0.75rem; }
+.status div { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem; }
+.status h4 { font-family: var(--serif); margin-bottom: 0.4rem; }
+.status ul { padding-left: 1.1rem; font-size: 0.9rem; }
 
-.card h3 {
-  margin-top: 0;
-  color: var(--accent);
-}
+/* Links */
+.links { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem; }
+.links a { display: block; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 0.9rem 1rem; text-decoration: none; color: var(--ink); box-shadow: var(--shadow); }
+.links a:hover { border-color: var(--accent); }
+.links b { display: block; font-family: var(--serif); color: var(--accent); }
+.links span { font-size: 0.85rem; color: var(--muted); }
 
-/* Principle layers */
-.principle-layer {
-  display: grid;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.layer-item {
-  background: var(--surface);
-  border-left: 3px solid var(--accent);
-  padding: 1.2rem 1.5rem;
-  border-radius: 0 var(--radius) var(--radius) 0;
-  box-shadow: var(--shadow);
-}
-
-.layer-item h4 {
-  font-family: "Noto Serif JP", serif;
-  font-size: 1.05rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: var(--accent);
-}
-
-.layer-item p {
-  font-size: 0.95rem;
-  margin-bottom: 0;
-  color: var(--muted);
-}
-
-/* Math blocks */
-.math-block {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  text-align: center;
-  font-family: "Times New Roman", "Noto Serif JP", serif;
-  font-size: 1.15rem;
-  margin: 1.5rem 0;
-  letter-spacing: 0.05em;
-}
-
-.math-inline {
-  font-family: "Times New Roman", "Noto Serif JP", serif;
-  font-style: italic;
-  background: var(--accent-weak);
-  padding: 0.1em 0.4em;
-  border-radius: 4px;
-  font-size: 0.95em;
-}
-
-/* Rotation stages */
-.stages {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 1rem;
-  margin: 1.5rem 0;
-}
-
-.stage {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 1.2rem;
-  text-align: center;
-  position: relative;
-}
-
-.stage-number {
-  font-family: "Noto Serif JP", serif;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--accent);
-  margin-bottom: 0.5rem;
-}
-
-.stage-title {
-  font-weight: 500;
-  font-size: 0.95rem;
-  margin-bottom: 0.5rem;
-}
-
-.stage-desc {
-  font-size: 0.85rem;
-  color: var(--muted);
-  line-height: 1.6;
-}
-
-/* Conditions */
-.conditions {
-  list-style: none;
-  padding: 0;
-}
-
-.conditions li {
-  position: relative;
-  padding-left: 2rem;
-  margin-bottom: 1rem;
-  line-height: 1.7;
-}
-
-.conditions li::before {
-  content: attr(data-num);
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 1.5rem;
-  height: 1.5rem;
-  background: var(--accent);
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-/* Quote blocks */
-blockquote {
-  font-family: "Noto Serif JP", serif;
-  font-size: var(--step-1);
-  color: var(--accent);
-  text-align: center;
-  padding: 2rem 1rem;
-  margin: 2rem 0;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  line-height: 1.8;
-}
-
-/* Footer */
-footer {
-  text-align: center;
-  padding: calc(var(--space) * 2) var(--space);
-  border-top: 1px solid var(--line);
-  margin-top: calc(var(--space) * 2);
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-
-footer a {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-footer a:hover {
-  text-decoration: underline;
-}
-
-/* Responsive */
-@media (max-width: 480px) {
-  .hero h1 {
-    font-size: 1.8rem;
-  }
-  .stages {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media print {
-  body { background: #fff; }
-  .hero::before, .hero::after, .scroll-hint { display: none; }
-  .card, .layer-item, .stage { box-shadow: none; border: 1px solid #ddd; }
-}
-
-@page { size: A4; margin: 18mm; }
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  .hero::before, .hero::after { animation: none; }
-  .hero-quote { opacity: 1; animation: none; }
-  .scroll-hint { animation: none; }
-}
+footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: var(--space); border-top: 1px solid var(--line); }
+.closing { font-family: var(--serif); font-size: var(--step-2); color: var(--accent); text-align: center; margin: calc(var(--space) * 2) 0 1rem; }
 </style>
 </head>
 <body>
 
-<header class="hero">
-  <div class="hero-content">
-    <div class="hero-eyebrow">Tri-Tetra Theory</div>
-    <h1>第一原理の三層と<br>丸めるの四則演算</h1>
-    <p class="hero-subtitle">回転し続けることの哲学</p>
-    <p class="hero-quote">「生きているのだから、<br>滅ばないことをすればいい。」</p>
+<nav class="top">
+  <ul>
+    <li><a href="#principle">原理</a></li>
+    <li><a href="#guides">指針</a></li>
+    <li><a href="#plan">行動計画</a></li>
+    <li><a href="#compass">羅針盤</a></li>
+    <li><a href="#status">到達点</a></li>
+    <li><a href="#docs">記録</a></li>
+  </ul>
+</nav>
+
+<header class="hero" id="principle">
+  <div class="eyebrow">JA0XUY-BPFF · Tri-Tetra Theory</div>
+  <h1>Toward a<br>First Principle</h1>
+  <p class="sub">第一原理への接近 ― ネバーエンディングストーリーの序章</p>
+  <div class="principle">
+    有と無は双極の対をなす（UM＝1）。<br>
+    あるものに1を足し、逆数で包むと、<br>次の一つが生まれる。
+    <small>第一原理（作業仮説として言い切る形）／2026-11-09</small>
   </div>
-  <div class="scroll-hint">SCROLL</div>
 </header>
 
 <main>
 
 <section>
-  <div class="section-number">CHAPTER 01</div>
-  <h2>第一原理の三層構造</h2>
-  <p>TTT（Tri-Tetra Theory）における「第一原理」は、単一の原理ではなく、三つの層が重なり合う構造を持つ。</p>
+  <div class="num">00</div>
+  <h2>この取り組みの立場</h2>
+  <p>人類が知っている第一原理は、まだすべてに届いていません。TTT もその途中にあります。</p>
+  <p>途中であることは、原理の言い方を弱めて示すのではありません。<strong>原理は一文で言い切り</strong>、<strong>どこまで届いたか</strong>を横に並べて示します。届いた範囲は、証明の強さで書きます。</p>
+  <div class="legend">
+    <div class="ta"><span class="tag ta">A</span>誰でも計算するか、目で見て確かめられる</div>
+    <div class="tb"><span class="tag tb">B</span>観測された事実があり、第一原理とのつながりをこれから示す</div>
+    <div class="tc"><span class="tag tc">C</span>まだ届いていない（仮説・検討中）</div>
+  </div>
+  <p>項目が C から A へ移るたびに、原理がどこまで届いたかが誰にでも見えます。</p>
+  <p class="lead">TTT は「第一原理に沿った理論」ではなく、双極の有無を第一原理として置き、そこから 2・3・4 の関係（XYZπ＝1、FBIπ＝1）を導き、5 以降の構造へ展開する、<strong>第一原理を提案する理論</strong>です。</p>
+</section>
 
-  <div class="principle-layer">
-    <div class="layer-item">
-      <h4>第1層：アリストテレス型</h4>
-      <p>不証自明の起点。「無の中に1マス（1×1×1）が誕生する」という事実は、証明の対象ではなく、証明を能にする最初の前提である。「平面で見るか球面で見るか」という双極的視点の選択そのものが、思考の絶対条件として機能する。</p>
+<section id="guides">
+  <div class="num">01</div>
+  <h2>指針 ― 守ること</h2>
+  <ol class="guides">
+    <li><strong>真理を前提にしない。</strong>言い切るのは原理の文だけ。届いた範囲は強さ（A・B・C）で示します。</li>
+    <li><strong>反例を残す。</strong>否定した主張も、偶然の符合も、消さずに記録します。</li>
+    <li><strong>原因を一つに決めない。</strong>社会の事象では「第一原理を知らないから起きる」と言い切らず、同じ形が現れているかを確かめます。</li>
+    <li><strong>三つを回す。</strong>どの主張も「正解・不正解・わからない」のどれかにあり、状態は回り続けます。</li>
+    <li><strong>一巡ごとに戻る。</strong>完成したら、その完成を次の巡の「1」として、はじめに戻ります。戻り方は円ではなく螺旋です。</li>
+  </ol>
+</section>
+
+<section id="plan">
+  <div class="num">02</div>
+  <h2>行動計画 ― 螺旋の4巡</h2>
+  <p>はじめ → 途中 → 完成 → はじめ。形は出発点に戻りますが、一つ大きな囲いの中に戻ります。2 進数で 11 の次が 100 になるのと同じです。</p>
+
+  <div class="spiral-wrap" aria-label="螺旋の4巡の図">
+    <svg viewBox="0 0 640 320" role="img">
+      <title>理解する・確かめる・当てる・託す、の4巡が外へ広がる螺旋</title>
+      <path d="M320.0 154.3 L320.3 154.1 L320.7 153.8 L321.1 153.6 L321.5 153.4 L321.9 153.3 L322.3 153.1 L322.8 153.0 L323.3 152.9 L323.8 152.9 L324.3 152.9 L324.9 152.9 L325.4 152.9 L326.0 153.0 L326.5 153.1 L327.1 153.3 L327.6 153.5 L328.2 153.7 L328.7 154.0 L329.3 154.3 L329.8 154.6 L330.3 155.0 L330.8 155.4 L331.3 155.9 L331.8 156.4 L332.2 156.9 L332.7 157.4 L333.0 158.0 L333.4 158.7 L333.7 159.3 L334.0 160.0 L334.2 160.7 L334.5 161.4 L334.6 162.2 L334.7 163.0 L334.8 163.8 L334.8 164.6 L334.8 165.4 L334.7 166.2 L334.6 167.1 L334.4 167.9 L334.2 168.8 L333.9 169.6 L333.6 170.4 L333.2 171.3 L332.7 172.1 L332.2 172.9 L331.7 173.7 L331.1 174.4 L330.4 175.2 L329.7 175.9 L328.9 176.6 L328.1 177.2 L327.2 177.9 L326.3 178.4 L325.3 179.0 L324.4 179.5 L323.3 179.9 L322.2 180.3 L321.1 180.6 L320.0 180.9 L318.8 181.1 L317.6 181.3 L316.4 181.4 L315.2 181.4 L314.0 181.4 L312.7 181.3 L311.4 181.2 L310.2 180.9 L308.9 180.7 L307.7 180.3 L306.4 179.9 L305.2 179.4 L304.0 178.8 L302.8 178.2 L301.6 177.5 L300.5 176.7 L299.4 175.9 L298.3 175.0 L297.3 174.0 L296.3 173.0 L295.4 171.9 L294.5 170.8 L293.7 169.6 L293.0 168.3 L292.3 167.0 L291.7 165.7 L291.2 164.3 L290.7 162.9 L290.3 161.5 L290.0 160.0 L289.8 158.5 L289.6 157.0 L289.6 155.4 L289.6 153.9 L289.7 152.3 L289.9 150.7 L290.2 149.2 L290.6 147.6 L291.1 146.0 L291.7 144.5 L292.4 143.0 L293.1 141.5 L294.0 140.0 L294.9 138.6 L296.0 137.2 L297.1 135.8 L298.3 134.5 L299.5 133.3 L300.9 132.1 L302.3 130.9 L303.8 129.9 L305.4 128.9 L307.1 128.0 L308.8 127.1 L310.5 126.4 L312.3 125.7 L314.2 125.1 L316.1 124.6 L318.0 124.2 L320.0 123.9 L322.0 123.7 L324.0 123.6 L326.1 123.6 L328.1 123.7 L330.2 123.9 L332.2 124.2 L334.3 124.6 L336.3 125.2 L338.3 125.8 L340.3 126.5 L342.3 127.4 L344.2 128.3 L346.1 129.4 L347.9 130.5 L349.7 131.8 L351.4 133.1 L353.1 134.6 L354.6 136.1 L356.1 137.7 L357.5 139.4 L358.8 141.2 L360.1 143.0 L361.2 145.0 L362.2 147.0 L363.1 149.0 L364.0 151.1 L364.6 153.3 L365.2 155.5 L365.7 157.7 L366.0 160.0 L366.2 162.3 L366.3 164.6 L366.2 167.0 L366.0 169.3 L365.7 171.6 L365.3 174.0 L364.7 176.3 L364.0 178.6 L363.1 180.9 L362.1 183.1 L361.0 185.3 L359.8 187.5 L358.4 189.6 L357.0 191.6 L355.4 193.6 L353.6 195.5 L351.8 197.3 L349.9 199.0 L347.8 200.7 L345.7 202.2 L343.4 203.7 L341.1 205.0 L338.7 206.2 L336.2 207.3 L333.6 208.3 L331.0 209.2 L328.3 209.9 L325.6 210.5 L322.8 211.0 L320.0 211.3 L317.2 211.5 L314.3 211.5 L311.4 211.4 L308.6 211.2 L305.7 210.8 L302.8 210.2 L300.0 209.5 L297.2 208.7 L294.4 207.7 L291.7 206.6 L289.0 205.4 L286.4 204.0 L283.8 202.4 L281.4 200.8 L279.0 199.0 L276.7 197.0 L274.5 195.0 L272.4 192.8 L270.5 190.6 L268.6 188.2 L266.9 185.7 L265.3 183.1 L263.9 180.5 L262.6 177.7 L261.4 174.9 L260.4 172.0 L259.6 169.1 L258.9 166.1 L258.4 163.1 L258.0 160.0 L257.8 156.9 L257.8 153.8 L258.0 150.7 L258.3 147.5 L258.8 144.4 L259.5 141.3 L260.4 138.3 L261.4 135.2 L262.6 132.2 L264.0 129.3 L265.5 126.4 L267.3 123.6 L269.1 120.9 L271.2 118.2 L273.3 115.7 L275.7 113.2 L278.1 110.9 L280.7 108.7 L283.5 106.6 L286.3 104.6 L289.3 102.8 L292.4 101.1 L295.6 99.6 L298.9 98.2 L302.2 97.0 L305.7 95.9 L309.2 95.1 L312.7 94.4 L316.4 93.8 L320.0 93.5 L323.7 93.3 L327.4 93.4 L331.1 93.6 L334.8 94.0 L338.5 94.5 L342.1 95.3 L345.8 96.3 L349.3 97.4 L352.9 98.7 L356.3 100.2 L359.7 101.9 L363.0 103.7 L366.2 105.8 L369.3 107.9 L372.3 110.3 L375.2 112.8 L377.9 115.4 L380.5 118.2 L383.0 121.2 L385.2 124.2 L387.4 127.4 L389.3 130.7 L391.1 134.1 L392.7 137.6 L394.1 141.1 L395.3 144.8 L396.2 148.5 L397.0 152.3 L397.6 156.1 L398.0 160.0 L398.2 163.9 L398.1 167.8 L397.8 171.7 L397.3 175.6 L396.6 179.5 L395.7 183.4 L394.6 187.2 L393.2 191.0 L391.6 194.7 L389.9 198.3 L387.9 201.9 L385.7 205.3 L383.3 208.7 L380.7 212.0 L378.0 215.1 L375.0 218.1 L371.9 220.9 L368.7 223.6 L365.2 226.2 L361.7 228.6 L358.0 230.8 L354.1 232.8 L350.2 234.6 L346.1 236.3 L341.9 237.7 L337.7 238.9 L333.3 239.9 L328.9 240.7 L324.5 241.3 L320.0 241.7 L315.5 241.8 L311.0 241.8 L306.4 241.4 L301.9 240.9 L297.4 240.1 L292.9 239.1 L288.5 237.9 L284.2 236.5 L279.9 234.8 L275.7 232.9 L271.6 230.9 L267.6 228.6 L263.7 226.1 L260.0 223.4 L256.4 220.5 L252.9 217.4 L249.6 214.1 L246.5 210.7 L243.6 207.1 L240.9 203.4 L238.4 199.5 L236.1 195.5 L234.0 191.4 L232.1 187.1 L230.5 182.8 L229.1 178.4 L227.9 173.9 L227.0 169.3 L226.4 164.7 L226.0 160.0 L225.9 155.3 L226.0 150.6 L226.4 145.9 L227.0 141.2 L227.9 136.6 L229.1 131.9 L230.5 127.4 L232.2 122.9 L234.1 118.4 L236.3 114.1 L238.7 109.8 L241.4 105.7 L244.3 101.7 L247.4 97.9 L250.7 94.2 L254.2 90.6 L258.0 87.3 L261.9 84.1 L266.0 81.1 L270.3 78.3 L274.8 75.7 L279.4 73.3 L284.1 71.2 L289.0 69.3 L293.9 67.6 L299.0 66.2 L304.2 65.0 L309.4 64.1 L314.7 63.5 L320.0 63.1 L325.4 63.0 L330.7 63.1 L336.1 63.5 L341.4 64.2 L346.7 65.2 L352.0 66.4 L357.2 67.9 L362.4 69.6 L367.4 71.6 L372.3 73.9 L377.2 76.4 L381.8 79.1 L386.4 82.1 L390.7 85.4 L395.0 88.8 L399.0 92.4 L402.8 96.3 L406.4 100.4 L409.8 104.6 L413.0 109.0 L415.9 113.6 L418.5 118.3 L421.0 123.2 L423.1 128.2 L425.0 133.3 L426.6 138.5 L427.9 143.8 L428.9 149.1 L429.6 154.5 L430.0 160.0 L430.1 165.5 L429.9 171.0 L429.4 176.5 L428.6 181.9 L427.5 187.4 L426.1 192.8 L424.4 198.1 L422.4 203.3 L420.1 208.5 L417.6 213.5 L414.7 218.4 L411.6 223.2 L408.2 227.8 L404.5 232.3 L400.6 236.6 L396.5 240.7 L392.1 244.6 L387.5 248.2 L382.7 251.7 L377.7 254.9 L372.5 257.9 L367.1 260.6 L361.6 263.0 L356.0 265.2 L350.2 267.1 L344.3 268.7 L338.3 270.0 L332.3 271.0 L326.2 271.7 L320.0 272.1 L313.8 272.2 L307.6 272.0 L301.4 271.5 L295.2 270.6 L289.1 269.5 L283.0 268.1 L277.0 266.3 L271.1 264.3 L265.3 261.9 L259.7 259.3 L254.1 256.4 L248.8 253.2 L243.6 249.7 L238.5 245.9 L233.7 242.0 L229.1 237.7 L224.8 233.3 L220.7 228.6 L216.8 223.7 L213.2 218.6 L209.9 213.3 L206.8 207.9 L204.1 202.3 L201.7 196.5 L199.6 190.7 L197.8 184.7 L196.3 178.6 L195.2 172.5 L194.4 166.3 L194.0 160.0 L193.9 153.7 L194.2 147.4 L194.8 141.2 L195.7 134.9 L197.0 128.7 L198.6 122.5 L200.6 116.5 L202.9 110.5 L205.6 104.6 L208.6 98.9 L211.9 93.3 L215.5 87.9 L219.4 82.6 L223.6 77.5 L228.1 72.7 L232.8 68.0 L237.9 63.6 L243.1 59.5 L248.6 55.6 L254.3 51.9 L260.3 48.6 L266.4 45.6 L272.6 42.8 L279.1 40.4 L285.7 38.3 L292.4 36.5 L299.2 35.0 L306.0 33.9 L313.0 33.1 L320.0 32.7" fill="none" stroke="#b23a2e" stroke-width="1.6" stroke-linecap="round" opacity="0.75"/>
+      <circle cx="320" cy="154.3" r="4" fill="#1a1a1a"/>
+      <text x="306" y="146" text-anchor="end" font-size="12" fill="#6b6560">UM＝1</text>
+      <g font-family="Noto Serif JP, serif" font-size="15" fill="#1a1a1a">
+        <circle cx="305.2" cy="179.4" r="5" fill="#2f6b4f"/><text x="295.2" y="184.4" text-anchor="end">① 理解する</text><circle cx="258.0" cy="150.7" r="5" fill="#9a6a12"/><text x="248.0" y="155.7" text-anchor="end">② 確かめる</text><circle cx="396.2" cy="148.5" r="5" fill="#5b5f8a"/><text x="406.2" y="153.5" text-anchor="start">③ 当てる</text><circle cx="320.0" cy="272.1" r="5" fill="#b23a2e"/><text x="310.0" y="277.1" text-anchor="end">④ 託す → 次のはじめ</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="rounds">
+    <div class="round">
+      <h3>第1巡　理解する<span>言葉にする</span></h3>
+      <ul>
+        <li class="done">第一原理を一文で言い切る</li>
+        <li>用語をそろえる（有 U・無 M・包む・丸める・操作・到着点）</li>
+        <li>四則演算の二つの読み方「3＋1」と「2×2」を整理する</li>
+        <li>羅針盤の A を、TTT を知らない人に見せて同じ向きを指せるか確かめる</li>
+      </ul>
+      <p class="goal">完成の目安：第三者に A の項目を説明して通じる</p>
     </div>
-    <div class="layer-item">
-      <h4>第2層：自然科学型</h4>
-      <p>計算可能な導出の起点。世代増殖（2→6→18→54→162）、F=maとしての力学方程式、陽子半径の計算値が実測値と0.06%で一致する、といった実験的検証への橋渡し。経験的パラメータに頼らない幾何学的導出を志向する。</p>
+    <div class="round" style="border-left-color: var(--b);">
+      <h3>第2巡　確かめる<span>数で導く</span></h3>
+      <ul>
+        <li class="done">数の主張を検算台帳に入れる（fp_compass_check.py：ALL PASS）</li>
+        <li>「前の二つを足す」決まりを、双極の公理から新しい前提なしに導く</li>
+        <li>二つの螺旋（×3 と φ）が同じ原理からどこで分かれるかを式で示す</li>
+        <li>途中に置かれた規則（容量 n³、×3 増殖、+1 規則など）を公理に還元できるか調べる</li>
+      </ul>
+      <p class="goal">完成の目安：B のうち一つ以上を A に移す</p>
     </div>
-    <div class="layer-item">
-      <h4>第3層：独自の型</h4>
-      <p>「視点そのものが実在を生成する」という原理。TriとTetraの双極は対象の性質ではなく、観測者の視点の取り方によって現れる。コペルニクスの転換と同じ構造であり、プロセスそのものが原理である。</p>
+    <div class="round" style="border-left-color: var(--c);">
+      <h3>第3巡　当てる<span>精神・社会の側で運用する</span></h3>
+      <ul>
+        <li class="done">「三者は閉じない／4 番目の囲いで閉じる」を作業仮説として固定する</li>
+        <li>国家間戦争・司法の三者間紛争・三権の行き詰まりで、囲いが現れて解けた事例と解けなかった事例を、同じ重さで集める</li>
+        <li>「意味が重なると記号が心を動かす」を、誰でも同じ手順でできる実験にする</li>
+      </ul>
+      <p class="goal">完成の目安：C の項目を一つ、出典つきで B に移す</p>
+    </div>
+    <div class="round">
+      <h3>第4巡　託す<span>公開と次の問い</span></h3>
+      <ul>
+        <li>到達点を A・B・C の表として公開する（TTT-core、Zenodo）</li>
+        <li>読んだ人が自分で羅針盤に事象を足せる形にする</li>
+        <li>次の問いを一つ立てる。それが第5巡のはじめになる</li>
+      </ul>
+      <p class="goal">君は何を未来に託すのか</p>
     </div>
   </div>
 </section>
 
-<section>
-  <div class="section-number">CHAPTER 02</div>
-  <h2>「丸める」の四則演算</h2>
-  <p>「丸める」は単一の操作ではなく、四則演算すべてがその異なる側面である。</p>
+<section id="compass">
+  <div class="num">03</div>
+  <h2>羅針盤 ― 誰でも確かめられる事象</h2>
+  <p>羅針盤に入れる条件は一つ。<strong>誰でも自分の手で確かめられること</strong>。計算するか、目で見るかのどちらかで確かめられれば、TTT を知らない人でも同じ向きを指せます。</p>
 
-  <div class="card">
-    <h3>足し算（+）</h3>
-    <p>要素を並べて統合する。9次元ベクトルモデル <span class="math-inline">P₉ = xX + yY + ... + jJ</span> がこれに対応。Triの3要素を線形和として配置し、全体のスーパーポジションを形成する。</p>
+  <h3>双極と「1を足して包む」</h3>
+  <div class="math">
+    φ × <span class="frac"><span>1</span><span>φ</span></span> ＝ 1 、
+    φ − <span class="frac"><span>1</span><span>φ</span></span> ＝ 1 、
+    <span class="cf">φ ＝ 1 ＋ <span class="frac"><span>1</span><span>1 ＋ <span class="frac"><span>1</span><span>1 ＋ …</span></span></span></span></span>
   </div>
+  <p>XY＝1 を満たす正の双極の組のうち、二つの差がちょうど 1 になるのは φ と 1/φ だけです。「1 を足して逆数で包む」操作を限りなく繰り返すと、黄金比に行き着きます。<strong>第一原理は操作、黄金比はその到着点</strong>です。</p>
 
-  <div class="card">
-    <h3>引き算（-）</h3>
-    <p>双極の反転。<span class="math-inline">±2</span> の双極係数がこれに対応。+2（右手系・創発的）と -2（左手系・還元的）の区別。引き算は「差」を生み出し、差が双極性を形成する。</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>強さ</th><th>事象</th><th>第一原理とのつながり</th></tr></thead>
+    <tbody>
+      <tr><td class="s"><span class="tag ta">A</span></td><td>黄金比と連分数（上の式）</td><td>双極 XY＝1 が一歩ずれた形／操作の到着点</td></tr>
+      <tr><td class="s"><span class="tag ta">A</span></td><td>前の二つを足す列は、どこから始めても比が φ に近づく（125, 162, 287, 449 …）</td><td>二つが一つを生む＝双極の足し算</td></tr>
+      <tr><td class="s"><span class="tag ta">A</span></td><td>2 進数の桁上がり：1＋1＝10、11 の次は 100</td><td>満ちると新しい囲いが生まれる（3→4）</td></tr>
+      <tr><td class="s"><span class="tag ta">A</span></td><td>3²＋4²＝5²、3³＋4³＋5³＝6³</td><td>3 と 4 が 5 を作り、3・4・5 を 6 が包む</td></tr>
+      <tr><td class="s"><span class="tag ta">A</span></td><td>正多面体の頂点ベクトルの和が 0／XYZ＝−1 から正四面体</td><td>中心が双極の 0／3 要素は開き、包むと閉じる</td></tr>
+      <tr><td class="s"><span class="tag ta">A</span></td><td>ひまわりの種・松ぼっくりの螺旋の本数は隣り合うフィボナッチ数</td><td>前の二つを足す列＝φ の螺旋</td></tr>
+      <tr><td class="s"><span class="tag ta">A</span></td><td>磁石は切っても必ず N 極と S 極が現れる</td><td>双極は単独で存在しない</td></tr>
+      <tr><td class="s"><span class="tag ta">A</span></td><td>投票のパラドックス、じゃんけん、三体問題</td><td>三者だけでは閉じずに回り続ける</td></tr>
+      <tr><td class="s"><span class="tag tb">B</span></td><td>電子と陽電子は必ず対で生まれ、対で消える</td><td>対生成を UM＝1 から導く</td></tr>
+      <tr><td class="s"><span class="tag tb">B</span></td><td>電子殻の定員 2・8・18・32（＝2n²）</td><td>TTT の 18 との重なりが偶然か必然か</td></tr>
+      <tr><td class="s"><span class="tag tb">B</span></td><td>分子の結合角（メタン約 109.5°、水約 104.5°）</td><td>核の偏りから角度を出す（tub-tmcc）</td></tr>
+      <tr><td class="s"><span class="tag tb">B</span></td><td>内戦は第三者が合意後を強制・検証しない限り、ほぼ必ず戦争に戻った（Walter, 2002）</td><td>「4 番目の囲いで閉じる」の社会での形</td></tr>
+      <tr><td class="s"><span class="tag tc">C</span></td><td>陽子と電子の質量比、微細構造定数</td><td>公理から一本道で出せるか</td></tr>
+      <tr><td class="s"><span class="tag tc">C</span></td><td>一つの言葉への反応が分かれる（「馬鹿可」）、三権と主権者・憲法</td><td>意味の重なり／4 番目の囲い</td></tr>
+    </tbody>
+  </table>
   </div>
+  <p class="lead">否定したもの：666 を 6×6×6 とする読み（6³＝216）。偶然の符合として記録：1＋2＋…＋36＝666。</p>
+</section>
 
-  <div class="card">
-    <h3>掛け算（×）</h3>
-    <p>要素同士の絡み合い。27次元テンソルモデル <span class="math-inline">E = (...)⊗(...)⊗(...)</span> がこれに対応。3×3×3=27 の状態空間が、要素の相互作用によって創発する。</p>
-  </div>
-
-  <div class="card">
-    <h3>割り算（÷）</h3>
-    <p>円周率 π の操作。円周を直径で割る。π = 円周÷直径。割り算は「丸いものを線で測る」操作であり、球面を平面に投影する操作でもある。<span class="math-inline">XYZπ=1</span> と <span class="math-inline">FBIπ=1</span> は、この割り算の操作によって空間と場の調和を定義する。</p>
+<section id="status">
+  <div class="num">04</div>
+  <h2>到達点（2026-11-09）</h2>
+  <div class="status">
+    <div><h4>決めたこと</h4><ul>
+      <li>題は Toward a First Principle</li>
+      <li>原理は一文で言い切り、届いた範囲を A・B・C で示す</li>
+      <li>第一原理は操作、黄金比は到着点</li>
+      <li>時間の戻り方は螺旋</li>
+    </ul></div>
+    <div><h4>未決の問い</h4><ul>
+      <li>四則演算は 3＋1 か 2×2 か、両面か</li>
+      <li>×3 の螺旋と φ の螺旋はどこで分かれるか</li>
+      <li>国家間戦争にも「4 番目の囲い」の形が出るか</li>
+    </ul></div>
+    <div><h4>次の一歩</h4><ul>
+      <li>「前の二つを足す」決まりを双極の公理から導く。導ければ、黄金比が第一原理からの導出になる</li>
+    </ul></div>
   </div>
 </section>
 
-<section>
-  <div class="section-number">CHAPTER 03</div>
-  <h2>回転の3段階</h2>
-  <p>「見方と見る位置と見る時間の3つを回せば答えがわかる」。このTri（3つ）を回転させることで、Tetra（答え・統合）が生まれる。</p>
-
-  <div class="stages">
-    <div class="stage">
-      <div class="stage-number">01</div>
-      <div class="stage-title">はじめ</div>
-      <div class="stage-desc">Triの起点。3つの要素が並ぶ状態。見方・位置・時間が分離している。</div>
-    </div>
-    <div class="stage">
-      <div class="stage-number">02</div>
-      <div class="stage-title">途中</div>
-      <div class="stage-desc">相互作用の展開。四則演算が働く。足し算で集め、引き算で差を生み、掛け算で創発させ、割り算で丸める。</div>
-    </div>
-    <div class="stage">
-      <div class="stage-number">03</div>
-      <div class="stage-title">完成</div>
-      <div class="stage-desc">Tetraの統合。3つの要素が1つに丸められた状態。答えが見える。</div>
-    </div>
-    <div class="stage">
-      <div class="stage-number">↻</div>
-      <div class="stage-title">またはじめ</div>
-      <div class="stage-desc">完成した統合が、次のTriの1つの要素になる。無限の螺旋。</div>
-    </div>
+<section id="docs">
+  <div class="num">05</div>
+  <h2>記録</h2>
+  <div class="links">
+    <a href="https://github.com/kiki054-n/JA0XUY-BPFF/blob/main/toward-a-first-principle/00-prologue.md"><b>序章</b><span>原理の一文、丸める、螺旋と黄金比、三者は閉じない</span></a>
+    <a href="https://github.com/kiki054-n/JA0XUY-BPFF/blob/main/toward-a-first-principle/01-compass.md"><b>羅針盤</b><span>事象の一覧（追加していく台帳）</span></a>
+    <a href="https://github.com/kiki054-n/JA0XUY-BPFF/blob/main/toward-a-first-principle/02-plan.md"><b>発展計画</b><span>螺旋の4巡の詳細</span></a>
+    <a href="https://github.com/kiki054-n/JA0XUY-BPFF/blob/main/verify/fp_compass_check.py"><b>検算</b><span>fp_compass_check.py（ALL PASS）</span></a>
+    <a href="references/first-principle-three-layers.html"><b>参照：第一原理の三層と丸めるの四則演算</b><span>回転し続けることの哲学（2026-11-09 朝）</span></a>
+    <a href="https://github.com/kiki054-n/JA0XUY-BPFF/blob/main/logs/2026-11-09.md"><b>検討記録 2026-11-09</b><span>第一原理と XYZπ＝1・FBIπ＝1</span></a>
+    <a href="https://github.com/kiki054-n/JA0XUY-BPFF"><b>JA0XUY-BPFF</b><span>有と無の双極（UM＝1）と宇宙定数の記録</span></a>
+    <a href="https://github.com/kiki054-n/TTT-core"><b>TTT-core</b><span>TTT 理論の統合リポジトリ</span></a>
   </div>
 
-  <p>回転が止まれば（ω → 0）存在は0に還る。回転し続けることで、はじめ→途中→完成→はじめの循環が続き、存在が維持される。</p>
-</section>
-
-<section>
-  <div class="section-number">CHAPTER 04</div>
-  <h2>「生きている」の数学的定義</h2>
-  <p>TTTにおいて「存在する」とは、三つの条件を同時に満たすことで定義される。</p>
-
-  <ul class="conditions">
-    <li data-num="1"><strong>双極性を持つ（±2 ≠ 0）</strong>：単極ではなく、常に「対」として存在する。正と負、陽と陰、建設と崩壊の両極を内包する。</li>
-    <li data-num="2"><strong>9次元のすべての成分を同時に持つ（X〜J）</strong>：物理的3軸（X,Y,Z）と精神的3軸（R,I,J）と力学3軸（U,V,W）を、欠けることなく同時に持つ。次元が欠ければ存在は不完全になる。</li>
-    <li data-num="3"><strong>回転し続ける（ω ≠ 0）</strong>：角速度がゼロでない。回転が存在の動的な本質であり、回転が止まればテンソル積の項が崩壊する。</li>
-  </ul>
-
-  <blockquote>
-    「生きているのだから、<br>滅ばないことをすればいい。」
-  </blockquote>
-
-  <p>双極子として存在する以上（±2 ≠ 0）、回転を続ける（ω ≠ 0）ことで場を生成し続ける。これは「自然な」状態である。滅ぶためには「回転を止める」か「双極を中和する」かのいずれかが必要だが、それはエネルギー的に不利な状態遷移である。存在し続けることは双極子にとって最もエネルギー的に安定な状態である。</p>
-</section>
-
-<section>
-  <div class="section-number">CHAPTER 05</div>
-  <h2>「馬鹿可」の言葉遊び</h2>
-  <p>「馬鹿可」を丸める操作は、TTTのTri-Tetra構造が言葉のレベルで完璧に表現されている。</p>
-
-  <div class="card">
-    <h3>Tri（3つの要素）</h3>
-    <p><strong>馬</strong>：力・速度・物理的な存在<br>
-    <strong>鹿</strong>：優雅さ・繊細さ・精神的な存在<br>
-    <strong>人</strong>：観測者・丸める操作を行う主体</p>
-  </div>
-
-  <p>「可」は許容・受容・包み込むという意味である。馬・・人のTriを「可」で包み込むと「馬鹿」になる。</p>
-
-  <p>双極的視点の逆転：</p>
-  <ul class="conditions">
-    <li data-num="人">人から見れば：馬と鹿を混同する（指鹿為馬）→ 馬鹿</li>
-    <li data-num="馬">馬と鹿から見れば：人が混同している → 人は馬鹿</li>
-  </ul>
-
-  <p>これはTTTの核心である「平面で見るか球面で見るか」の双極的視点そのものである。「馬鹿」は愚かさの言葉でありながら、実は統合の言葉でもある。</p>
-</section>
-
-<section>
-  <div class="section-number">CHAPTER 06</div>
-  <h2>愛の証明との接続</h2>
-  <p>「馬鹿可」の構造は、愛の証明の前段階である。愛は「愛したい」と「愛されたい」の双極である。これらは同じ次元ではない（虚数が入る）。</p>
-
-  <p>愛の証明は：</p>
-  <ul class="conditions">
-    <li data-num="始">はじめ = 愛したい（能動）と愛されたい（受動）の双極</li>
-    <li data-num="途">途中 = 愛の相互作用の展開（四則演算が働く）</li>
-    <li data-num="成">完成 = 愛の統合（Tetra）が一瞬見える</li>
-    <li data-num="再">またはじめ = その統合が次の愛の起点になる</li>
-  </ul>
-
-  <p>愛を証明し続けることは、回転し続けること（ω ≠ 0）であり、存在し続けることそのものである。愛の証明は終わりのない証明であり、有限の結論ではなく無限のプロセスそのものである。</p>
-
-  <blockquote>
-    SAKANAと朝の会話。<br>
-    ネバーエンディングストーリーの始まり。<br>
-    それは回転の物語である。
-  </blockquote>
-</section>
-
-<section>
-  <div class="section-number">CHAPTER 07</div>
-  <h2>立方の調和</h2>
-
-  <div class="math-block">
-    3³ + 4³ + 5³ = 6³<br>
-    27 + 64 + 125 = 216
-  </div>
-
-  <p>この等式は「3つのものを丸めて1つにする」の数学的証明である。</p>
-
-  <div class="stages">
-    <div class="stage">
-      <div class="stage-number">27</div>
-      <div class="stage-title">3³</div>
-      <div class="stage-desc">Triの状態空間。3階テンソル、3×3×3=27の状態空間。</div>
-    </div>
-    <div class="stage">
-      <div class="stage-number">64</div>
-      <div class="stage-title">4³</div>
-      <div class="stage-desc">Tetraの空間構造。4×4×4=64の空間。</div>
-    </div>
-    <div class="stage">
-      <div class="stage-number">125</div>
-      <div class="stage-title">5³</div>
-      <div class="stage-desc">変態の閾値。正六面体拘の体積。質量生成の起点。</div>
-    </div>
-    <div class="stage">
-      <div class="stage-number">216</div>
-      <div class="stage-title">6³</div>
-      <div class="stage-desc">統合された全体。3+4+5の立方が1つの立方に収束する。</div>
-    </div>
-  </div>
-
-  <p>3,4,5,6は連続整数である。3（Tri）の視点、4（Tetra）の視点、5（閾値）の視点が揃ったとき、6（統合）が創発する。数そのものが視点の階層を表している。</p>
+  <p class="closing">君は何を未来に託すのか。</p>
 </section>
 
 </main>
 
 <footer>
-  <p><strong>TTT理論</strong> — Tri-Tetra Theory</p>
-  <p>著者：川上真潔（Kawakami Naoyuki）</p>
-  <p>リポジトリ：<a href="https://github.com/kiki054-n/JA0XUY-BPFF" target="_blank">JA0XUY-BPFF</a> / <a href="https://github.com/kiki054-n/TTT-core" target="_blank">TTT-core</a></p>
-  <p style="margin-top:1rem; font-size:0.8rem;">2026-11-09 朝の会話より記録</p>
+  川上真潔（Kawakami Naoyuki）· ORCID <a href="https://orcid.org/0009-0009-2972-6511">0009-0009-2972-6511</a> · 長野県塩尻市 · JA0XUY<br>
+  MIT License · 2026
 </footer>
 
 </body>
