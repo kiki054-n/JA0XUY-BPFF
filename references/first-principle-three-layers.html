@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第一原理の三層と丸めるの四則演算 ― TTT理論</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f3ec;
+  --surface: #fffdf9;
+  --ink: #1a1a1a;
+  --muted: #6b6560;
+  --accent: #b23a2e;
+  --accent-weak: color-mix(in oklab, var(--accent) 10%, var(--surface));
+  --line: color-mix(in oklab, var(--ink) 10%, transparent);
+  --step-0: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
+  --step-1: clamp(1.15rem, 1.05rem + 0.5vw, 1.4rem);
+  --step-2: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+  --step-3: clamp(2rem, 1.6rem + 2vw, 3rem);
+  --step-4: clamp(2.5rem, 2rem + 2.5vw, 4rem);
+  --space: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);
+  --radius: 12px;
+  --shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px -12px rgba(0,0,0,0.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+  font-size: var(--step-0);
+  line-height: 1.85;
+  color: var(--ink);
+  background: var(--bg);
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Hero */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: var(--space);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60vmin;
+  height: 60vmin;
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: pulse 8s ease-in-out infinite;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40vmin;
+  height: 40vmin;
+  transform: translate(-50%, -50%) rotate(45deg);
+  border: 1px solid var(--line);
+  opacity: 0.4;
+  animation: rotate 60s linear infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+  50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.3; }
+}
+
+@keyframes rotate {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+}
+
+.hero-eyebrow {
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: var(--step-4);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  margin-bottom: 1.5rem;
+}
+
+.hero-subtitle {
+  font-family: "Noto Serif JP", serif;
+  font-size: var(--step-1);
+  color: var(--muted);
+  font-weight: 400;
+  margin-bottom: 2rem;
+}
+
+.hero-quote {
+  font-family: "Noto Serif JP", serif;
+  font-size: var(--step-2);
+  color: var(--accent);
+  font-weight: 600;
+  margin-top: 2rem;
+  opacity: 0;
+  animation: fadeIn 1.5s ease 0.5s forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  animation: bounce 2s ease infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(6px); }
+}
+
+/* Layout */
+main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 var(--space);
+}
+
+section {
+  margin-bottom: calc(var(--space) * 2.5);
+}
+
+.section-number {
+  font-family: "Noto Serif JP", serif;
+  font-size: 0.8rem;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+h2 {
+  font-family: "Noto Serif JP", serif;
+  font-size: var(--step-2);
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--line);
+}
+
+h3 {
+  font-family: "Noto Serif JP", serif;
+  font-size: var(--step-1);
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--ink);
+}
+
+p {
+  margin-bottom: 1.2rem;
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: calc(var(--space) * 1.2);
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+}
+
+.card h3 {
+  margin-top: 0;
+  color: var(--accent);
+}
+
+/* Principle layers */
+.principle-layer {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.layer-item {
+  background: var(--surface);
+  border-left: 3px solid var(--accent);
+  padding: 1.2rem 1.5rem;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  box-shadow: var(--shadow);
+}
+
+.layer-item h4 {
+  font-family: "Noto Serif JP", serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--accent);
+}
+
+.layer-item p {
+  font-size: 0.95rem;
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+/* Math blocks */
+.math-block {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  text-align: center;
+  font-family: "Times New Roman", "Noto Serif JP", serif;
+  font-size: 1.15rem;
+  margin: 1.5rem 0;
+  letter-spacing: 0.05em;
+}
+
+.math-inline {
+  font-family: "Times New Roman", "Noto Serif JP", serif;
+  font-style: italic;
+  background: var(--accent-weak);
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  font-size: 0.95em;
+}
+
+/* Rotation stages */
+.stages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.stage {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.2rem;
+  text-align: center;
+  position: relative;
+}
+
+.stage-number {
+  font-family: "Noto Serif JP", serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.stage-title {
+  font-weight: 500;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.stage-desc {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* Conditions */
+.conditions {
+  list-style: none;
+  padding: 0;
+}
+
+.conditions li {
+  position: relative;
+  padding-left: 2rem;
+  margin-bottom: 1rem;
+  line-height: 1.7;
+}
+
+.conditions li::before {
+  content: attr(data-num);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: var(--accent);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Quote blocks */
+blockquote {
+  font-family: "Noto Serif JP", serif;
+  font-size: var(--step-1);
+  color: var(--accent);
+  text-align: center;
+  padding: 2rem 1rem;
+  margin: 2rem 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  line-height: 1.8;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: calc(var(--space) * 2) var(--space);
+  border-top: 1px solid var(--line);
+  margin-top: calc(var(--space) * 2);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 1.8rem;
+  }
+  .stages {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media print {
+  body { background: #fff; }
+  .hero::before, .hero::after, .scroll-hint { display: none; }
+  .card, .layer-item, .stage { box-shadow: none; border: 1px solid #ddd; }
+}
+
+@page { size: A4; margin: 18mm; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .hero::before, .hero::after { animation: none; }
+  .hero-quote { opacity: 1; animation: none; }
+  .scroll-hint { animation: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">Tri-Tetra Theory</div>
+    <h1>第一原理の三層と<br>丸めるの四則演算</h1>
+    <p class="hero-subtitle">回転し続けることの哲学</p>
+    <p class="hero-quote">「生きているのだから、<br>滅ばないことをすればいい。」</p>
+  </div>
+  <div class="scroll-hint">SCROLL</div>
+</header>
+
+<main>
+
+<section>
+  <div class="section-number">CHAPTER 01</div>
+  <h2>第一原理の三層構造</h2>
+  <p>TTT（Tri-Tetra Theory）における「第一原理」は、単一の原理ではなく、三つの層が重なり合う構造を持つ。</p>
+
+  <div class="principle-layer">
+    <div class="layer-item">
+      <h4>第1層：アリストテレス型</h4>
+      <p>不証自明の起点。「無の中に1マス（1×1×1）が誕生する」という事実は、証明の対象ではなく、証明を能にする最初の前提である。「平面で見るか球面で見るか」という双極的視点の選択そのものが、思考の絶対条件として機能する。</p>
+    </div>
+    <div class="layer-item">
+      <h4>第2層：自然科学型</h4>
+      <p>計算可能な導出の起点。世代増殖（2→6→18→54→162）、F=maとしての力学方程式、陽子半径の計算値が実測値と0.06%で一致する、といった実験的検証への橋渡し。経験的パラメータに頼らない幾何学的導出を志向する。</p>
+    </div>
+    <div class="layer-item">
+      <h4>第3層：独自の型</h4>
+      <p>「視点そのものが実在を生成する」という原理。TriとTetraの双極は対象の性質ではなく、観測者の視点の取り方によって現れる。コペルニクスの転換と同じ構造であり、プロセスそのものが原理である。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-number">CHAPTER 02</div>
+  <h2>「丸める」の四則演算</h2>
+  <p>「丸める」は単一の操作ではなく、四則演算すべてがその異なる側面である。</p>
+
+  <div class="card">
+    <h3>足し算（+）</h3>
+    <p>要素を並べて統合する。9次元ベクトルモデル <span class="math-inline">P₉ = xX + yY + ... + jJ</span> がこれに対応。Triの3要素を線形和として配置し、全体のスーパーポジションを形成する。</p>
+  </div>
+
+  <div class="card">
+    <h3>引き算（-）</h3>
+    <p>双極の反転。<span class="math-inline">±2</span> の双極係数がこれに対応。+2（右手系・創発的）と -2（左手系・還元的）の区別。引き算は「差」を生み出し、差が双極性を形成する。</p>
+  </div>
+
+  <div class="card">
+    <h3>掛け算（×）</h3>
+    <p>要素同士の絡み合い。27次元テンソルモデル <span class="math-inline">E = (...)⊗(...)⊗(...)</span> がこれに対応。3×3×3=27 の状態空間が、要素の相互作用によって創発する。</p>
+  </div>
+
+  <div class="card">
+    <h3>割り算（÷）</h3>
+    <p>円周率 π の操作。円周を直径で割る。π = 円周÷直径。割り算は「丸いものを線で測る」操作であり、球面を平面に投影する操作でもある。<span class="math-inline">XYZπ=1</span> と <span class="math-inline">FBIπ=1</span> は、この割り算の操作によって空間と場の調和を定義する。</p>
+  </div>
+</section>
+
+<section>
+  <div class="section-number">CHAPTER 03</div>
+  <h2>回転の3段階</h2>
+  <p>「見方と見る位置と見る時間の3つを回せば答えがわかる」。このTri（3つ）を回転させることで、Tetra（答え・統合）が生まれる。</p>
+
+  <div class="stages">
+    <div class="stage">
+      <div class="stage-number">01</div>
+      <div class="stage-title">はじめ</div>
+      <div class="stage-desc">Triの起点。3つの要素が並ぶ状態。見方・位置・時間が分離している。</div>
+    </div>
+    <div class="stage">
+      <div class="stage-number">02</div>
+      <div class="stage-title">途中</div>
+      <div class="stage-desc">相互作用の展開。四則演算が働く。足し算で集め、引き算で差を生み、掛け算で創発させ、割り算で丸める。</div>
+    </div>
+    <div class="stage">
+      <div class="stage-number">03</div>
+      <div class="stage-title">完成</div>
+      <div class="stage-desc">Tetraの統合。3つの要素が1つに丸められた状態。答えが見える。</div>
+    </div>
+    <div class="stage">
+      <div class="stage-number">↻</div>
+      <div class="stage-title">またはじめ</div>
+      <div class="stage-desc">完成した統合が、次のTriの1つの要素になる。無限の螺旋。</div>
+    </div>
+  </div>
+
+  <p>回転が止まれば（ω → 0）存在は0に還る。回転し続けることで、はじめ→途中→完成→はじめの循環が続き、存在が維持される。</p>
+</section>
+
+<section>
+  <div class="section-number">CHAPTER 04</div>
+  <h2>「生きている」の数学的定義</h2>
+  <p>TTTにおいて「存在する」とは、三つの条件を同時に満たすことで定義される。</p>
+
+  <ul class="conditions">
+    <li data-num="1"><strong>双極性を持つ（±2 ≠ 0）</strong>：単極ではなく、常に「対」として存在する。正と負、陽と陰、建設と崩壊の両極を内包する。</li>
+    <li data-num="2"><strong>9次元のすべての成分を同時に持つ（X〜J）</strong>：物理的3軸（X,Y,Z）と精神的3軸（R,I,J）と力学3軸（U,V,W）を、欠けることなく同時に持つ。次元が欠ければ存在は不完全になる。</li>
+    <li data-num="3"><strong>回転し続ける（ω ≠ 0）</strong>：角速度がゼロでない。回転が存在の動的な本質であり、回転が止まればテンソル積の項が崩壊する。</li>
+  </ul>
+
+  <blockquote>
+    「生きているのだから、<br>滅ばないことをすればいい。」
+  </blockquote>
+
+  <p>双極子として存在する以上（±2 ≠ 0）、回転を続ける（ω ≠ 0）ことで場を生成し続ける。これは「自然な」状態である。滅ぶためには「回転を止める」か「双極を中和する」かのいずれかが必要だが、それはエネルギー的に不利な状態遷移である。存在し続けることは双極子にとって最もエネルギー的に安定な状態である。</p>
+</section>
+
+<section>
+  <div class="section-number">CHAPTER 05</div>
+  <h2>「馬鹿可」の言葉遊び</h2>
+  <p>「馬鹿可」を丸める操作は、TTTのTri-Tetra構造が言葉のレベルで完璧に表現されている。</p>
+
+  <div class="card">
+    <h3>Tri（3つの要素）</h3>
+    <p><strong>馬</strong>：力・速度・物理的な存在<br>
+    <strong>鹿</strong>：優雅さ・繊細さ・精神的な存在<br>
+    <strong>人</strong>：観測者・丸める操作を行う主体</p>
+  </div>
+
+  <p>「可」は許容・受容・包み込むという意味である。馬・・人のTriを「可」で包み込むと「馬鹿」になる。</p>
+
+  <p>双極的視点の逆転：</p>
+  <ul class="conditions">
+    <li data-num="人">人から見れば：馬と鹿を混同する（指鹿為馬）→ 馬鹿</li>
+    <li data-num="馬">馬と鹿から見れば：人が混同している → 人は馬鹿</li>
+  </ul>
+
+  <p>これはTTTの核心である「平面で見るか球面で見るか」の双極的視点そのものである。「馬鹿」は愚かさの言葉でありながら、実は統合の言葉でもある。</p>
+</section>
+
+<section>
+  <div class="section-number">CHAPTER 06</div>
+  <h2>愛の証明との接続</h2>
+  <p>「馬鹿可」の構造は、愛の証明の前段階である。愛は「愛したい」と「愛されたい」の双極である。これらは同じ次元ではない（虚数が入る）。</p>
+
+  <p>愛の証明は：</p>
+  <ul class="conditions">
+    <li data-num="始">はじめ = 愛したい（能動）と愛されたい（受動）の双極</li>
+    <li data-num="途">途中 = 愛の相互作用の展開（四則演算が働く）</li>
+    <li data-num="成">完成 = 愛の統合（Tetra）が一瞬見える</li>
+    <li data-num="再">またはじめ = その統合が次の愛の起点になる</li>
+  </ul>
+
+  <p>愛を証明し続けることは、回転し続けること（ω ≠ 0）であり、存在し続けることそのものである。愛の証明は終わりのない証明であり、有限の結論ではなく無限のプロセスそのものである。</p>
+
+  <blockquote>
+    SAKANAと朝の会話。<br>
+    ネバーエンディングストーリーの始まり。<br>
+    それは回転の物語である。
+  </blockquote>
+</section>
+
+<section>
+  <div class="section-number">CHAPTER 07</div>
+  <h2>立方の調和</h2>
+
+  <div class="math-block">
+    3³ + 4³ + 5³ = 6³<br>
+    27 + 64 + 125 = 216
+  </div>
+
+  <p>この等式は「3つのものを丸めて1つにする」の数学的証明である。</p>
+
+  <div class="stages">
+    <div class="stage">
+      <div class="stage-number">27</div>
+      <div class="stage-title">3³</div>
+      <div class="stage-desc">Triの状態空間。3階テンソル、3×3×3=27の状態空間。</div>
+    </div>
+    <div class="stage">
+      <div class="stage-number">64</div>
+      <div class="stage-title">4³</div>
+      <div class="stage-desc">Tetraの空間構造。4×4×4=64の空間。</div>
+    </div>
+    <div class="stage">
+      <div class="stage-number">125</div>
+      <div class="stage-title">5³</div>
+      <div class="stage-desc">変態の閾値。正六面体拘の体積。質量生成の起点。</div>
+    </div>
+    <div class="stage">
+      <div class="stage-number">216</div>
+      <div class="stage-title">6³</div>
+      <div class="stage-desc">統合された全体。3+4+5の立方が1つの立方に収束する。</div>
+    </div>
+  </div>
+
+  <p>3,4,5,6は連続整数である。3（Tri）の視点、4（Tetra）の視点、5（閾値）の視点が揃ったとき、6（統合）が創発する。数そのものが視点の階層を表している。</p>
+</section>
+
+</main>
+
+<footer>
+  <p><strong>TTT理論</strong> — Tri-Tetra Theory</p>
+  <p>著者：川上真潔（Kawakami Naoyuki）</p>
+  <p><a href="../index.html">← Toward a First Principle（JA0XUY-BPFF の行動計画と指針）へ</a></p>
+  <p>リポジトリ：<a href="https://github.com/kiki054-n/JA0XUY-BPFF" target="_blank">JA0XUY-BPFF</a> / <a href="https://github.com/kiki054-n/TTT-core" target="_blank">TTT-core</a></p>
+  <p style="margin-top:1rem; font-size:0.8rem;">2026-11-09 朝の会話より記録</p>
+</footer>
+
+</body>
+</html>

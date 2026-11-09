@@ -175,6 +175,7 @@ $$\varphi = 1 + \cfrac{1}{1 + \cfrac{1}{1 + \cfrac{1}{1 + \cdots}}}$$
 5. 羅針盤となる事象を集め続ける → [`01-compass.md`](01-compass.md)
 6. 理解と運用の発展計画 → [`02-plan.md`](02-plan.md)
 7. 数の主張の検算 → [`verify/fp_compass_check.py`](../verify/fp_compass_check.py)
+8. 第2巡その1：「前の二つを足す」の導出 → [`03-derivation.md`](03-derivation.md)
 
 ---
 

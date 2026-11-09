@@ -126,8 +126,10 @@ $$w(a) = w_0 + w_a(1-a)$$
 JA0XUY-BPFF/
 ├── README.md
 ├── LICENSE
+├── index.html            Web ページ：Toward a First Principle（行動計画と指針）
 ├── references/
-│   └── equations.md      参照する方程式と出典
+│   ├── equations.md      参照する方程式と出典
+│   └── first-principle-three-layers.html  参照：第一原理の三層と丸めるの四則演算（旧 index.html）
 ├── hypotheses/
 │   ├── bpff.md           作業仮説の本文と改訂履歴
 │   └── genesis-principle.md  宇宙と空間の創生原理（2026-11-06）
@@ -143,14 +145,16 @@ JA0XUY-BPFF/
 ├── toward-a-first-principle/  第一原理への接近（2026-11-09〜、ネバーエンディングストーリー）
 │   ├── 00-prologue.md    序章：原理の一文、丸める、螺旋と黄金比、三者は閉じない
 │   ├── 01-compass.md     羅針盤：誰でも確かめられる事象の一覧（[A]・[B]・[C]）
-│   └── 02-plan.md        理解と運用の発展計画（螺旋の4巡）
+│   ├── 02-plan.md        理解と運用の発展計画（螺旋の4巡）
+│   └── 03-derivation.md  第2巡その1：「前の二つを足す」を双極の公理から導く
 └── verify/
     ├── bpff_check.py         仮説1〜7の数値検証
     ├── bpff_boundary_w.py    境界層からの w₀・wₐ と DESI DR2 の比較
     ├── bpff_alpha_check.py   ε₀・μ₀ と α、1/α の式の照合
     ├── bpff_alpha_v5.py      V5 式の照合、偶然確率、108 の導出
     ├── bpff_sign_parity.py   符号の交互（積 (-1)^n）と半超立方体・正四面体
-    └── fp_compass_check.py   序章の数の主張（黄金比・連分数・二つの螺旋・3³+4³+5³=6³・666）
+    ├── fp_compass_check.py   序章の数の主張（黄金比・連分数・二つの螺旋・3³+4³+5³=6³・666）
+    └── fp_fibonacci_derivation.py  「前の二つを足す」の導出と二つの螺旋の分かれ目
 ```
 
 ---
