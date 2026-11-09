@@ -127,6 +127,8 @@ JA0XUY-BPFF/
 ├── README.md
 ├── LICENSE
 ├── index.html            Web ページ：Toward a First Principle（行動計画と指針）
+├── compass/
+│   └── index.html        立体羅針盤：事象を立方体1個の中に置くアプリ（2026-11-10）
 ├── references/
 │   ├── equations.md      参照する方程式と出典
 │   └── first-principle-three-layers.html  参照：第一原理の三層と丸めるの四則演算（旧 index.html）

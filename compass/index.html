@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>立体羅針盤 ― JA0XUY-BPFF</title>
+<meta name="description" content="事象を立方体1個の中に置き、8区画・6極・中心からのずれと、全体の重心・戻す向きを見る立体羅針盤。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f3ec; --surface: #fffdf9; --ink: #1a1a1a; --muted: #6b6560;
+  --accent: #b23a2e; --accent-weak: #f6e9e4;
+  --a: #2f6b4f; --a-weak: #e5efe8; --b: #9a6a12; --b-weak: #f5ecd9; --c: #5b5f8a; --c-weak: #e8e9f2;
+  --line: rgba(26,26,26,0.12); --radius: 12px;
+  --shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px -12px rgba(0,0,0,0.15);
+  --serif: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --ax: #2f6b8f; --ay: #2f6b4f; --az: #b23a2e;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif; font-size: 15px; line-height: 1.7;
+  color: var(--ink); background: var(--bg); overflow-wrap: anywhere; }
+a { color: var(--accent); }
+header { padding: 1.5rem 1.25rem 0.5rem; max-width: 1200px; margin: 0 auto; }
+.eyebrow { font-size: 0.75rem; letter-spacing: 0.18em; color: var(--muted); }
+h1 { font-family: var(--serif); font-size: clamp(1.7rem, 1.3rem + 2vw, 2.6rem); line-height: 1.3; }
+.sub { font-family: var(--serif); color: var(--muted); margin-top: 0.25rem; }
+main { max-width: 1200px; margin: 0 auto; padding: 1rem 1.25rem 3rem; display: grid; gap: 1.25rem;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+@media (max-width: 520px) { .turn span { display:none } .ro .v.num { font-size: 0.85rem; } .slider { grid-template-columns: 3rem 1fr 3rem 2.8rem; } }
+@media (max-width: 880px) { main { grid-template-columns: minmax(0, 1fr); } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1rem 1.1rem; }
+.card h2 { font-family: var(--serif); font-size: 1.1rem; margin-bottom: 0.6rem; }
+.card h2 small { font-family: inherit; font-size: 0.75rem; color: var(--muted); font-weight: 400; margin-left: 0.4rem; }
+#stage { position: relative; aspect-ratio: 1 / 1; width: 100%; touch-action: none; cursor: grab; border-radius: 10px;
+  background: radial-gradient(circle at 50% 45%, #fffdf9 0%, #f1ece3 100%); }
+#stage:active { cursor: grabbing; }
+canvas { width: 100%; height: 100%; display: block; }
+.turns { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; margin-top: 0.75rem; }
+button, select, input[type=text], textarea {
+  font: inherit; font-size: 0.9rem; border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 0.4rem 0.6rem; color: var(--ink); }
+button { cursor: pointer; background: var(--surface); }
+button:hover { border-color: var(--accent); color: var(--accent); }
+button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+button.primary:hover { color: #fff; opacity: 0.9; }
+.turn { text-align: left; padding: 0.5rem 0.65rem; line-height: 1.35; }
+.turn b { display: block; font-family: var(--serif); font-size: 0.95rem; }
+.turn span { font-size: 0.75rem; color: var(--muted); }
+.turn em { font-style: normal; font-size: 0.78rem; color: var(--accent); }
+.legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; font-size: 0.78rem; color: var(--muted); margin-top: 0.6rem; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: -1px; }
+.row { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+.field { margin: 0.45rem 0; }
+.field label { display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 0.15rem; }
+.field input[type=text], .field textarea, .field select { width: 100%; }
+textarea { resize: vertical; min-height: 2.6rem; }
+.slider { display: grid; grid-template-columns: 5.2rem 1fr 5.2rem 3rem; align-items: center; gap: 0.4rem; margin: 0.35rem 0; font-size: 0.82rem; }
+.slider .neg { text-align: right; color: var(--muted); }
+.slider .pos { color: var(--muted); }
+.slider output { text-align: right; font-variant-numeric: tabular-nums; font-weight: 500; }
+.slider input { width: 100%; }
+.axname { font-family: var(--serif); font-weight: 600; font-size: 0.85rem; margin-top: 0.4rem; }
+.readout { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; margin-top: 0.6rem; }
+.ro { background: #f6f2ea; border-radius: 8px; padding: 0.5rem 0.65rem; }
+.ro .k { font-size: 0.72rem; color: var(--muted); }
+.ro .v { font-family: var(--serif); font-size: 1.02rem; font-weight: 600; line-height: 1.4; }
+.ro .n { font-size: 0.72rem; color: var(--muted); }
+.tag { display: inline-block; font-size: 0.7rem; font-weight: 600; border-radius: 4px; padding: 0 0.35rem; margin-right: 0.3rem; }
+.tag.A { background: var(--a-weak); color: var(--a); } .tag.B { background: var(--b-weak); color: var(--b); } .tag.C { background: var(--c-weak); color: var(--c); }
+.list { grid-column: 1 / -1; }
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+th, td { text-align: left; padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--serif); font-weight: 600; background: #f1ece3; white-space: nowrap; }
+tr.sel td { background: var(--accent-weak); }
+tr.unplaced td { color: var(--muted); }
+tbody tr { cursor: pointer; }
+.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.note { font-size: 0.78rem; color: var(--muted); margin-top: 0.5rem; }
+.axes-edit { display: grid; grid-template-columns: 2.2rem 1fr 1fr 1fr; gap: 0.35rem; align-items: center; font-size: 0.82rem; }
+.axes-edit input { width: 100%; }
+details summary { cursor: pointer; font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem; }
+footer { text-align: center; font-size: 0.8rem; color: var(--muted); padding: 1rem; }
+.empty { color: var(--muted); font-size: 0.85rem; padding: 0.5rem 0; }
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">JA0XUY-BPFF · TOWARD A FIRST PRINCIPLE</div>
+  <h1>立体羅針盤</h1>
+  <p class="sub">事象を立方体1個の中に置く。3つの軸の双極で位置を決め、8区画・6極・中心からのずれを見る。</p>
+</header>
+
+<main>
+  <section class="card">
+    <h2>立方体1個 <small>ドラッグで回す</small></h2>
+    <div id="stage"><canvas id="cv"></canvas></div>
+    <div class="turns">
+      <button class="turn" id="tPos"><b>見る位置</b><span>どの軸に立つか（3回で戻る）</span><br><em id="tPosV">自由</em></button>
+      <button class="turn" id="tView"><b>見方</b><span>頂点8か、面6か（2回で戻る）</span><br><em id="tViewV">頂点で見る（8）</em></button>
+      <button class="turn" id="tTime"><b>見る時間</b><span>開くか、閉じるか（2回で戻る）</span><br><em id="tTimeV">閉じている</em></button>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--a)"></i>[A]</span>
+      <span><i style="background:var(--b)"></i>[B]</span>
+      <span><i style="background:var(--c)"></i>[C]</span>
+      <span><i style="background:var(--ink)"></i>9点目（8の中心）</span>
+      <span><i style="background:none;border:1.5px solid var(--accent)"></i>10点目（囲みの中心）</span>
+      <span><i style="background:var(--accent);border-radius:2px;transform:rotate(45deg)"></i>重心と戻す向き</span>
+    </div>
+    <div class="readout" id="whole"></div>
+  </section>
+
+  <section class="card">
+    <h2>事象を置く <small id="selLabel"></small></h2>
+    <div class="row">
+      <button class="primary" id="addBtn">＋ 新しい事象</button>
+      <button id="delBtn">この事象を消す</button>
+    </div>
+    <div id="editor"></div>
+
+    <details>
+      <summary>軸の意味を決める</summary>
+      <div class="field">
+        <label>ひな形</label>
+        <select id="preset"></select>
+      </div>
+      <div class="axes-edit" id="axesEdit"></div>
+      <p class="note">軸を変えても、置いた数値はそのまま残ります。軸の意味が変わると、同じ数値でも読みが変わります。</p>
+    </details>
+  </section>
+
+  <section class="card list">
+    <h2>事象の一覧 <small>羅針盤 01-compass.md の項目を最初から入れてあります。位置はまだ置いていません</small></h2>
+    <div style="overflow-x:auto"><table>
+      <thead><tr><th>#</th><th>事象</th><th>強さ</th><th>位置 (x, y, z)</th><th>8区画</th><th>近い極</th><th>ずれ</th></tr></thead>
+      <tbody id="tbody"></tbody>
+    </table></div>
+    <div class="row" style="margin-top:0.75rem">
+      <button id="expBtn">JSON に書き出す</button>
+      <label class="row" style="gap:0.3rem"><button id="impBtn" type="button">JSON を読み込む</button><input type="file" id="impFile" accept="application/json" hidden></label>
+      <button id="resetBtn">最初の状態に戻す</button>
+    </div>
+    <p class="note">置いた位置はこのブラウザに保存されます。リポジトリに残すときは JSON に書き出してください。</p>
+    <details>
+      <summary>この羅針盤の読み方</summary>
+      <div class="note" style="font-size:0.85rem;color:var(--ink);line-height:1.8">
+        <p>立方体の中心を (0, 0, 0)、頂点を (±1, ±1, ±1) とします。事象ごとに x・y・z の3つを −1 から ＋1 で決めると、立方体の中の1点になります。</p>
+        <p><b>8区画</b>：3つの符号の組。双極の場の8方向で、立方体の頂点にあたります。<br>
+        <b>近い極</b>：いちばん大きく振れている軸とその符号。6方向（正8面体の頂点）のどれに近いか。<br>
+        <b>ずれ</b>：中心からの距離を頂点までの距離（√3）で割った値。0 なら中心、1 なら頂点。<br>
+        <b>XYZ の符号</b>：3つの符号の積。−1 なら正四面体 T⁻（開いている）、＋1 なら T⁺ の頂点の区画。<br>
+        <b>重心</b>：置いた事象すべての平均。中心からずれていれば、全体がその向きに偏っています。<b>戻す向き</b>は重心から中心へ向かう矢印です。</p>
+        <p>強さ [A]・[B]・[C] は <a href="https://github.com/kiki054-n/JA0XUY-BPFF/blob/main/toward-a-first-principle/00-prologue.md">序章 §0</a> のとおり。回す三つ（見る位置＝対角線まわりの 1/3 回転、見方＝双対、見る時間＝半回転）の割り当ては <a href="https://github.com/kiki054-n/JA0XUY-BPFF/blob/main/toward-a-first-principle/04-relations.md">04-relations.md §9</a> の Claude の提案で、強さは [C] です。</p>
+      </div>
+    </details>
+  </section>
+</main>
+
+<footer>
+  川上真潔（Kawakami Naoyuki）· JA0XUY · <a href="../index.html">Toward a First Principle</a> · <a href="https://github.com/kiki054-n/JA0XUY-BPFF">JA0XUY-BPFF</a> · MIT
+</footer>
+
+<script>
+(() => {
+'use strict';
+
+// ---------- 軸のひな形 ----------
+const PRESETS = {
+  fbi:  { name: '物理：FBI（X＝B、Y＝I、Z＝F）', axes: [
+          { name: 'B（磁）',   neg: '−B', pos: '＋B' },
+          { name: 'I（流れ）', neg: '−I', pos: '＋I' },
+          { name: 'F（力）',   neg: '−F', pos: '＋F' } ] },
+  xyz:  { name: '空間：xX・yY・zZ', axes: [
+          { name: 'X 空間・行動', neg: '−X', pos: '＋X' },
+          { name: 'Y 時間・経験', neg: '−Y', pos: '＋Y' },
+          { name: 'Z 場・関係',   neg: '−Z', pos: '＋Z' } ] },
+  rij:  { name: '精神：rR・iI・jJ', axes: [
+          { name: 'R 欲求・意志',   neg: '−R', pos: '＋R' },
+          { name: 'I 関係性・共感', neg: '−I', pos: '＋I' },
+          { name: 'J 倫理',         neg: '−J', pos: '＋J' } ] },
+  three:{ name: '三者：正解・不正解・わからない', axes: [
+          { name: '正解',       neg: '遠い', pos: '近い' },
+          { name: '不正解',     neg: '遠い', pos: '近い' },
+          { name: 'わからない', neg: '遠い', pos: '近い' } ] },
+  free: { name: '自由（自分で書く）', axes: [
+          { name: 'X', neg: '−X', pos: '＋X' },
+          { name: 'Y', neg: '−Y', pos: '＋Y' },
+          { name: 'Z', neg: '−Z', pos: '＋Z' } ] }
+};
+
+// ---------- 羅針盤 01-compass.md の項目（位置は未配置） ----------
+const SEED = [
+  ['A1','黄金比 φ×(1/φ)＝1、φ−1/φ＝1','A','計算','双極 XY＝1 が一歩ずれた形'],
+  ['A2','連分数 φ＝1＋1/(1＋…)','A','計算','1 を足して逆数で包む操作の到着点'],
+  ['A3','前の二つを足す列の比が φ に近づく','A','計算','二つが一つを生む＝双極の足し算'],
+  ['A4','2進数の桁上がり','A','計算','満ちると新しい囲いが生まれる（3→4）'],
+  ['A5','3²＋4²＝5²、3³＋4³＋5³＝6³','A','計算','3 と 4 が 5 を作り、6 が包む'],
+  ['A6','正多面体の頂点ベクトルの和が 0','A','計算','中心が双極の 0'],
+  ['A7','XYZ＝−1 から正四面体が出る','A','計算','3 要素は開き、包むと閉じる'],
+  ['A8','ひまわり・松ぼっくりの螺旋の本数','A','数える','前の二つを足す列＝φ の螺旋'],
+  ['A9','磁石は切っても N と S が現れる','A','磁石を切る','双極は単独で存在しない'],
+  ['A10','投票のパラドックス（コンドルセ）','A','3人×3案の順位表','3 は回り続ける'],
+  ['A11','じゃんけん','A','―','三者の循環に勝者はない'],
+  ['A12','三体問題','A','数値計算','二体は閉じ、三体は閉じない'],
+  ['A13','立方体1個の数 1・3・4・6・8・12、27','A','数える','1マスから 3・4・6・8・9・27'],
+  ['A14','正四面体の回転軸 4本＋3本＝7本','A','計算、模型','3を4で、4を3で見る'],
+  ['A15','半回転3つで元に戻る、ijk＝−1','A','計算、箱を回す','XYZ＝−1 は開き、もう一つ掛けて閉じる'],
+  ['A16','3で回る足し算で四則演算が閉じる','A','計算','完成（3）がゼロの役'],
+  ['A17','2³＋1＝3²（8 と 9）','A','計算','8点に中心を置いて9点'],
+  ['B1','電子と陽電子の対生成・対消滅','B','素粒子物理の観測','対生成を UM＝1 から導く'],
+  ['B2','電子殻の定員 2・8・18・32','B','原子物理','TTT の 18 との重なり'],
+  ['B3','分子の結合角（メタン・水）','B','分子構造の測定','核の偏りから角度を出す'],
+  ['B4','内戦は第三者の保証がないと戻る','B','Walter (2002)','4 番目の囲いで閉じる'],
+  ['C1','陽子と電子の質量比 1836','C','―','公理から一本道で'],
+  ['C2','微細構造定数 1/α','C','測定の決着待ち','V5 式は予言値'],
+  ['C3','一つの言葉への反応が分かれる','C','実験の形に','意味の重なりと分岐'],
+  ['C4','三権分立の行き詰まりと4番目','C','歴史の事例','囲いが働いたときに解けたか'],
+  ['C5','国どうしの戦争でも B4 の形が出るか','C','国家間戦争の終結研究','B4 と照合']
+];
+
+const KEY = 'ja0xuy-bpff:compass:v1';
+const AXCOL = ['#2f6b8f', '#2f6b4f', '#b23a2e'];
+const STRCOL = { A: '#2f6b4f', B: '#9a6a12', C: '#5b5f8a' };
+
+function seedState() {
+  return {
+    preset: 'fbi',
+    axes: JSON.parse(JSON.stringify(PRESETS.fbi.axes)),
+    events: SEED.map(([id, name, s, how, link]) => ({ id, name, strength: s, how, link, note: '', placed: false, p: [0, 0, 0] })),
+    sel: 'A1'
+  };
+}
+let S;
+try { S = JSON.parse(localStorage.getItem(KEY)) || seedState(); } catch (e) { S = seedState(); }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+
+// ---------- 計算 ----------
+const SQ3 = Math.sqrt(3);
+const EPS = 0.005;
+const sgn = v => (v > EPS ? 1 : v < -EPS ? -1 : 0);
+function octant(p) {               // 8区画（符号の組）
+  const s = p.map(sgn);
+  if (s.includes(0)) return null;
+  return s;
+}
+function octName(p) {
+  const s = octant(p);
+  if (!s) return '境目の上';
+  return s.map((v, i) => v > 0 ? S.axes[i].pos : S.axes[i].neg).join('・');
+}
+function pole(p) {                 // 近い極（6方向）
+  let k = 0;
+  for (let i = 1; i < 3; i++) if (Math.abs(p[i]) > Math.abs(p[k])) k = i;
+  if (Math.abs(p[k]) <= EPS) return { name: '中心', k: -1 };
+  return { name: p[k] > 0 ? S.axes[k].pos : S.axes[k].neg, k, s: sgn(p[k]) };
+}
+function parity(p) {               // XYZ の符号
+  const s = octant(p);
+  if (!s) return null;
+  return s[0] * s[1] * s[2];
+}
+const norm = p => Math.hypot(p[0], p[1], p[2]);
+const fmt = v => (v >= 0 ? '＋' : '−') + Math.abs(v).toFixed(2);
+function centroid() {
+  const ps = S.events.filter(e => e.placed).map(e => e.p);
+  if (!ps.length) return null;
+  const c = [0, 0, 0];
+  ps.forEach(p => { for (let i = 0; i < 3; i++) c[i] += p[i]; });
+  return { c: c.map(v => v / ps.length), n: ps.length };
+}
+
+// ---------- 3D 描画 ----------
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+const stage = document.getElementById('stage');
+let yaw = -0.62, pitch = 0.42;     // 視点
+let target = null;                 // 見る位置のアニメーション先
+let viewMode = 'vertex';           // 'vertex' | 'face'
+let timeOpen = false;              // 見る時間：開く（T⁻ だけ）か、閉じる（8 頂点）か
+let posIdx = -1;                   // 見る位置：-1 自由、0 X、1 Y、2 Z
+let W = 0, H = 0, DPR = 1;
+
+function resize() {
+  DPR = window.devicePixelRatio || 1;
+  const r = stage.getBoundingClientRect();
+  W = r.width; H = r.height;
+  cv.width = W * DPR; cv.height = H * DPR;
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  draw();
+}
+function rot(v) {                  // z 軸まわり yaw、続いて x 軸まわり pitch
+  const [x, y, z] = v;
+  const cy = Math.cos(yaw), sy = Math.sin(yaw);
+  const x1 = x * cy - y * sy, y1 = x * sy + y * cy;
+  const cp = Math.cos(pitch), sp = Math.sin(pitch);
+  return [x1, y1 * cp - z * sp, y1 * sp + z * cp];
+}
+function proj(v) {
+  const r = rot(v);
+  const d = 6, f = d / (d + r[1]);
+  const sc = Math.min(W, H) * 0.24;
+  return { x: W / 2 + r[0] * sc * f, y: H / 2 - r[2] * sc * f, depth: r[1], f };
+}
+function line(a, b, color, w = 1, dash = null) {
+  const A = proj(a), B = proj(b);
+  ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y);
+  ctx.strokeStyle = color; ctx.lineWidth = w; ctx.setLineDash(dash || []); ctx.stroke(); ctx.setLineDash([]);
+}
+function arrow(a, b, color, w = 2) {
+  const A = proj(a), B = proj(b);
+  const ang = Math.atan2(B.y - A.y, B.x - A.x), L = Math.hypot(B.x - A.x, B.y - A.y);
+  if (L < 4) return;
+  ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y);
+  ctx.strokeStyle = color; ctx.lineWidth = w; ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(B.x, B.y);
+  ctx.lineTo(B.x - 9 * Math.cos(ang - 0.4), B.y - 9 * Math.sin(ang - 0.4));
+  ctx.lineTo(B.x - 9 * Math.cos(ang + 0.4), B.y - 9 * Math.sin(ang + 0.4));
+  ctx.closePath(); ctx.fillStyle = color; ctx.fill();
+}
+function label(v, text, color, dx = 0, dy = 0, size = 12, weight = 500) {
+  const P = proj(v);
+  ctx.font = `${weight} ${size}px "Noto Sans JP", sans-serif`;
+  ctx.fillStyle = color; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(text, P.x + dx, P.y + dy);
+}
+const VERTS = [];
+for (const x of [-1, 1]) for (const y of [-1, 1]) for (const z of [-1, 1]) VERTS.push([x, y, z]);
+const EDGES = [];
+VERTS.forEach((a, i) => VERTS.forEach((b, j) => {
+  if (j > i && Math.abs(a[0]-b[0]) + Math.abs(a[1]-b[1]) + Math.abs(a[2]-b[2]) === 2) EDGES.push([a, b]);
+}));
+const POLES = [[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]];
+const TMINUS = VERTS.filter(v => v[0]*v[1]*v[2] === -1);
+
+function draw() {
+  if (!W) return;
+  ctx.clearRect(0, 0, W, H);
+  const faint = 'rgba(26,26,26,0.16)', mid = 'rgba(26,26,26,0.38)';
+
+  // 10点目：全体を囲むもの（半径 √3 の球の輪郭）
+  const O = proj([0,0,0]);
+  const R = Math.min(W, H) * 0.24 * SQ3 * O.f;
+  ctx.beginPath(); ctx.arc(O.x, O.y, R, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(178,58,46,0.28)'; ctx.setLineDash([3, 5]); ctx.lineWidth = 1; ctx.stroke(); ctx.setLineDash([]);
+
+  // 立方体（XYZ、頂点8）
+  const cubeStrong = viewMode === 'vertex';
+  EDGES.forEach(([a, b]) => line(a, b, cubeStrong ? mid : faint, cubeStrong ? 1.2 : 0.8));
+
+  // 正8面体（FBI、面の中心6）
+  if (viewMode === 'face') {
+    for (let i = 0; i < 6; i++) for (let j = i + 1; j < 6; j++) {
+      const a = POLES[i], b = POLES[j];
+      if (a[0]*b[0] + a[1]*b[1] + a[2]*b[2] === 0) line(a, b, 'rgba(178,58,46,0.55)', 1.2);
+    }
+  }
+  // 見る時間：開いている＝T⁻（XYZ＝−1）だけを強く
+  if (timeOpen) {
+    for (let i = 0; i < 4; i++) for (let j = i + 1; j < 4; j++) line(TMINUS[i], TMINUS[j], 'rgba(91,95,138,0.75)', 1.4);
+  }
+
+  // 軸
+  for (let k = 0; k < 3; k++) {
+    const a = [0,0,0], b = [0,0,0]; a[k] = -1.35; b[k] = 1.35;
+    line(a, b, AXCOL[k], 1, [4, 4]);
+    label(b, S.axes[k].pos, AXCOL[k], 0, -10, 12, 600);
+    label(a, S.axes[k].neg, AXCOL[k], 0, -10, 11, 400);
+  }
+
+  // 頂点（8区画）
+  VERTS.forEach(v => {
+    const P = proj(v);
+    const odd = v[0]*v[1]*v[2] === -1;
+    const on = viewMode === 'vertex' && (!timeOpen || odd);
+    ctx.beginPath(); ctx.arc(P.x, P.y, on ? 3.2 : 2, 0, Math.PI * 2);
+    ctx.fillStyle = on ? (odd ? '#5b5f8a' : '#6b6560') : 'rgba(26,26,26,0.2)'; ctx.fill();
+  });
+  // 極（6方向）
+  POLES.forEach(v => {
+    const P = proj(v);
+    const on = viewMode === 'face';
+    ctx.beginPath(); ctx.arc(P.x, P.y, on ? 3.6 : 2, 0, Math.PI * 2);
+    ctx.fillStyle = on ? '#b23a2e' : 'rgba(178,58,46,0.25)'; ctx.fill();
+  });
+
+  // 事象（奥から手前へ）
+  const placed = S.events.filter(e => e.placed).map(e => ({ e, P: proj(e.p) })).sort((a, b) => b.P.depth - a.P.depth);
+  placed.forEach(({ e, P }) => {
+    const sel = e.id === S.sel;
+    const col = STRCOL[e.strength] || '#6b6560';
+    // 中心からの細い線
+    line([0,0,0], e.p, sel ? col : 'rgba(26,26,26,0.12)', sel ? 1.4 : 0.8);
+    if (sel) {   // 軸への影
+      line(e.p, [e.p[0], e.p[1], 0], 'rgba(26,26,26,0.25)', 0.8, [2, 3]);
+      line([e.p[0], e.p[1], 0], [e.p[0], 0, 0], 'rgba(26,26,26,0.18)', 0.8, [2, 3]);
+      line([e.p[0], e.p[1], 0], [0, e.p[1], 0], 'rgba(26,26,26,0.18)', 0.8, [2, 3]);
+    }
+    const r = (sel ? 7 : 5) * (0.85 + 0.3 * P.f);
+    ctx.beginPath(); ctx.arc(P.x, P.y, r, 0, Math.PI * 2);
+    ctx.fillStyle = col; ctx.globalAlpha = sel ? 1 : 0.85; ctx.fill(); ctx.globalAlpha = 1;
+    if (sel) { ctx.lineWidth = 2; ctx.strokeStyle = '#fff'; ctx.stroke(); }
+    ctx.font = `${sel ? 600 : 500} ${sel ? 12 : 11}px "Noto Sans JP", sans-serif`;
+    ctx.fillStyle = sel ? '#1a1a1a' : '#6b6560'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(e.id, P.x + r + 3, P.y);
+  });
+
+  // 9点目と10点目（同じ場所、役割が違う）
+  ctx.beginPath(); ctx.arc(O.x, O.y, 4, 0, Math.PI * 2); ctx.fillStyle = '#1a1a1a'; ctx.fill();
+  ctx.beginPath(); ctx.arc(O.x, O.y, 8, 0, Math.PI * 2); ctx.strokeStyle = '#b23a2e'; ctx.lineWidth = 1.5; ctx.stroke();
+
+  // 重心と戻す向き
+  const C = centroid();
+  if (C && norm(C.c) > 1e-6) {
+    arrow(C.c, [0,0,0], '#b23a2e', 2);
+    const P = proj(C.c);
+    ctx.save(); ctx.translate(P.x, P.y); ctx.rotate(Math.PI / 4);
+    ctx.fillStyle = '#b23a2e'; ctx.fillRect(-5, -5, 10, 10); ctx.restore();
+    label(C.c, '重心', '#b23a2e', 0, -14, 11, 600);
+  }
+}
+
+// ドラッグで回す
+let drag = null;
+stage.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, yaw, pitch }; stage.setPointerCapture(e.pointerId); target = null; });
+stage.addEventListener('pointermove', e => {
+  if (!drag) return;
+  yaw = drag.yaw + (e.clientX - drag.x) * 0.01;
+  pitch = Math.max(-1.5, Math.min(1.5, drag.pitch + (e.clientY - drag.y) * 0.01));
+  if (posIdx !== -1) { posIdx = -1; turnsUI(); }
+  draw();
+});
+stage.addEventListener('pointerup', () => { drag = null; });
+stage.addEventListener('pointercancel', () => { drag = null; });
+
+// ---------- 回す三つ ----------
+// 見る位置：X → Y → Z に立つ（対角線 (1,1,1) まわりの 1/3 回転で軸が入れ替わる順）
+const STAND = [
+  { yaw: -Math.PI / 2 + 0.35, pitch: 0.32 },   // ＋X が手前
+  { yaw: Math.PI + 0.35,      pitch: 0.32 },   // ＋Y が手前
+  { yaw: -0.35,               pitch: 1.2  }    // ＋Z が手前（上から）
+];
+function animate() {
+  if (!target) return;
+  let dy = target.yaw - yaw;
+  dy = Math.atan2(Math.sin(dy), Math.cos(dy));
+  const dp = target.pitch - pitch;
+  if (Math.abs(dy) < 0.003 && Math.abs(dp) < 0.003) { yaw = target.yaw; pitch = target.pitch; target = null; draw(); return; }
+  yaw += dy * 0.15; pitch += dp * 0.15; draw();
+  requestAnimationFrame(animate);
+}
+function turnsUI() {
+  document.getElementById('tPosV').textContent = posIdx < 0 ? '自由' : `${S.axes[posIdx].pos} に立つ`;
+  document.getElementById('tViewV').textContent = viewMode === 'vertex' ? '頂点で見る（8区画）' : '面で見る（6極）';
+  document.getElementById('tTimeV').textContent = timeOpen ? '開いている（XYZ＝−1 の T⁻）' : '閉じている（8頂点）';
+}
+document.getElementById('tPos').onclick = () => {
+  posIdx = (posIdx + 1) % 3;
+  target = STAND[posIdx]; requestAnimationFrame(animate); turnsUI();
+};
+document.getElementById('tView').onclick = () => { viewMode = viewMode === 'vertex' ? 'face' : 'vertex'; turnsUI(); draw(); renderSel(); };
+document.getElementById('tTime').onclick = () => { timeOpen = !timeOpen; turnsUI(); draw(); };
+
+// ---------- 編集 ----------
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const cur = () => S.events.find(e => e.id === S.sel);
+
+function renderEditor() {
+  const e = cur();
+  const ed = $('editor');
+  if (!e) { ed.innerHTML = '<p class="empty">一覧から事象を選ぶか、新しい事象を足してください。</p>'; $('selLabel').textContent = ''; return; }
+  $('selLabel').textContent = e.id;
+  ed.innerHTML = `
+    <div class="field"><label>事象（何が起きるか）</label><input type="text" id="fName" value="${esc(e.name)}"></div>
+    <div class="row">
+      <div class="field" style="flex:1"><label>強さ</label>
+        <select id="fStr">${['A','B','C'].map(s => `<option ${s === e.strength ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
+      <div class="field" style="flex:2"><label>確かめ方</label><input type="text" id="fHow" value="${esc(e.how)}"></div>
+    </div>
+    <div class="field"><label>第一原理とのつながり</label><input type="text" id="fLink" value="${esc(e.link)}"></div>
+    <div class="field"><label>置いた理由（なぜこの位置か）</label><textarea id="fNote">${esc(e.note)}</textarea></div>
+    ${S.axes.map((a, k) => `
+      <div class="axname" style="color:${AXCOL[k]}">${esc(a.name)}</div>
+      <div class="slider"><span class="neg">${esc(a.neg)}</span>
+        <input type="range" min="-1" max="1" step="0.05" value="${e.p[k]}" id="s${k}">
+        <span class="pos">${esc(a.pos)}</span><output id="o${k}">${fmt(e.p[k])}</output></div>`).join('')}
+    <div class="row" style="margin-top:0.3rem">
+      <button id="unplace">${e.placed ? '置かずに戻す' : 'まだ置いていません'}</button>
+      <button id="toCenter">中心に置く</button>
+    </div>
+    <div class="readout" id="selRO"></div>`;
+  $('fName').oninput = ev => { e.name = ev.target.value; commit(false); };
+  $('fStr').onchange = ev => { e.strength = ev.target.value; commit(); };
+  $('fHow').oninput = ev => { e.how = ev.target.value; commit(false); };
+  $('fLink').oninput = ev => { e.link = ev.target.value; commit(false); };
+  $('fNote').oninput = ev => { e.note = ev.target.value; commit(false); };
+  for (let k = 0; k < 3; k++) $('s' + k).oninput = ev => {
+    e.p[k] = parseFloat(ev.target.value); e.placed = true;
+    $('o' + k).textContent = fmt(e.p[k]); $('unplace').textContent = '置かずに戻す';
+    commit();
+  };
+  $('unplace').onclick = () => { if (e.placed) { e.placed = false; renderEditor(); commit(); } };
+  $('toCenter').onclick = () => { e.p = [0, 0, 0]; e.placed = true; renderEditor(); commit(); };
+  renderSel();
+}
+
+function renderSel() {
+  const e = cur(), box = $('selRO');
+  if (!e || !box) return;
+  if (!e.placed) { box.innerHTML = '<div class="ro" style="grid-column:1/-1"><div class="n">スライダーを動かすと、立方体の中に置かれます。</div></div>'; return; }
+  const p = e.p, pr = parity(p), po = pole(p), d = norm(p) / SQ3;
+  const back = p.map(v => -v);
+  box.innerHTML = `
+    <div class="ro" style="${viewMode === 'vertex' ? 'outline:1.5px solid var(--c)' : ''}"><div class="k">8区画（方向）</div><div class="v">${esc(octName(p))}</div>
+      <div class="n">${pr === null ? '軸の上にあり、区画が一つに決まらない' : pr < 0 ? 'XYZ＝−1：T⁻ の区画（開いている）' : 'XYZ＝＋1：T⁺ の区画'}</div></div>
+    <div class="ro" style="${viewMode === 'face' ? 'outline:1.5px solid var(--accent)' : ''}"><div class="k">近い極（6方向）</div><div class="v">${esc(po.name)}</div>
+      <div class="n">${po.k < 0 ? '' : `${esc(S.axes[po.k].name)} にいちばん振れている`}</div></div>
+    <div class="ro"><div class="k">中心からのずれ</div><div class="v">${d.toFixed(2)}</div><div class="n">0＝中心、1＝頂点</div></div>
+    <div class="ro"><div class="k">中心へ戻す向き</div><div class="v num">(${back.map(fmt).join(', ')})</div><div class="n">この事象だけを見たとき</div></div>`;
+}
+
+function renderWhole() {
+  const C = centroid(), box = $('whole');
+  const total = S.events.length, n = C ? C.n : 0;
+  if (!C) {
+    box.innerHTML = `<div class="ro" style="grid-column:1/-1"><div class="k">全体</div><div class="v">置いた事象 0 / ${total}</div><div class="n">事象を置くと、重心と戻す向きが出ます。</div></div>`;
+    return;
+  }
+  const c = C.c, d = norm(c) / SQ3, po = pole(c);
+  const counts = { '-1': 0, '1': 0, 'null': 0 };
+  S.events.filter(e => e.placed).forEach(e => counts[String(parity(e.p))]++);
+  box.innerHTML = `
+    <div class="ro"><div class="k">置いた事象</div><div class="v">${n} / ${total}</div><div class="n">T⁻ ${counts['-1']} · T⁺ ${counts['1']} · 境目 ${counts['null']}</div></div>
+    <div class="ro"><div class="k">重心のずれ（全体の偏り）</div><div class="v">${d.toFixed(3)}</div><div class="n">${d < 0.02 ? 'ほぼ中心でつり合っている' : `${esc(po.name)} の側へ偏っている`}</div></div>
+    <div class="ro"><div class="k">重心</div><div class="v num">(${c.map(fmt).join(', ')})</div><div class="n">${esc(octName(c))}</div></div>
+    <div class="ro"><div class="k">戻す向き（重心→中心）</div><div class="v num">(${c.map(v => fmt(-v)).join(', ')})</div><div class="n">${po.k < 0 ? '' : `いちばん効くのは ${esc(po.s > 0 ? S.axes[po.k].neg : S.axes[po.k].pos)} へ`}</div></div>`;
+}
+
+function renderTable() {
+  $('tbody').innerHTML = S.events.map(e => {
+    const pl = e.placed;
+    return `<tr data-id="${esc(e.id)}" class="${e.id === S.sel ? 'sel' : ''} ${pl ? '' : 'unplaced'}">
+      <td class="num">${esc(e.id)}</td><td>${esc(e.name)}</td>
+      <td><span class="tag ${e.strength}">${e.strength}</span></td>
+      <td class="num">${pl ? `(${e.p.map(v => v.toFixed(2)).join(', ')})` : '未配置'}</td>
+      <td>${pl ? esc(octName(e.p)) : ''}</td>
+      <td>${pl ? esc(pole(e.p).name) : ''}</td>
+      <td class="num">${pl ? (norm(e.p) / SQ3).toFixed(2) : ''}</td></tr>`;
+  }).join('');
+  $('tbody').querySelectorAll('tr').forEach(tr => tr.onclick = () => { S.sel = tr.dataset.id; save(); renderAll(); });
+}
+
+function commit(full = true) {
+  save(); draw(); renderSel(); renderWhole();
+  if (full) renderTable(); else {
+    const tr = $('tbody').querySelector(`tr[data-id="${CSS.escape(S.sel)}"] td:nth-child(2)`);
+    if (tr) tr.textContent = cur().name;
+  }
+}
+
+$('addBtn').onclick = () => {
+  let i = 1; while (S.events.some(e => e.id === 'N' + i)) i++;
+  const id = 'N' + i;
+  S.events.push({ id, name: '新しい事象', strength: 'C', how: '', link: '', note: '', placed: false, p: [0, 0, 0] });
+  S.sel = id; save(); renderAll();
+  $('fName').focus(); $('fName').select();
+};
+$('delBtn').onclick = () => {
+  const e = cur(); if (!e) return;
+  if (!confirm(`「${e.id} ${e.name}」を一覧から消しますか。`)) return;
+  const idx = S.events.indexOf(e);
+  S.events.splice(idx, 1);
+  S.sel = S.events[Math.min(idx, S.events.length - 1)]?.id || null;
+  save(); renderAll();
+};
+
+// 軸
+function renderAxes() {
+  $('preset').innerHTML = Object.entries(PRESETS).map(([k, v]) => `<option value="${k}" ${k === S.preset ? 'selected' : ''}>${v.name}</option>`).join('');
+  $('axesEdit').innerHTML = '<span></span><span class="note" style="margin:0">軸の名前</span><span class="note" style="margin:0">− の極</span><span class="note" style="margin:0">＋ の極</span>' +
+    S.axes.map((a, k) => `<b style="color:${AXCOL[k]}">${'XYZ'[k]}</b>
+      <input type="text" data-k="${k}" data-f="name" value="${esc(a.name)}">
+      <input type="text" data-k="${k}" data-f="neg" value="${esc(a.neg)}">
+      <input type="text" data-k="${k}" data-f="pos" value="${esc(a.pos)}">`).join('');
+  $('axesEdit').querySelectorAll('input').forEach(inp => inp.onchange = () => {
+    S.axes[+inp.dataset.k][inp.dataset.f] = inp.value; S.preset = 'free';
+    $('preset').value = 'free'; save(); renderEditor(); renderTable(); renderWhole(); turnsUI(); draw();
+  });
+}
+$('preset').onchange = ev => {
+  S.preset = ev.target.value;
+  S.axes = JSON.parse(JSON.stringify(PRESETS[S.preset].axes));
+  save(); renderAll();
+};
+
+// 書き出し・読み込み
+$('expBtn').onclick = () => {
+  const out = { format: 'ja0xuy-bpff-compass', version: 1, exported: new Date().toISOString(), axes: S.axes, preset: S.preset, events: S.events };
+  const blob = new Blob([JSON.stringify(out, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `compass-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+};
+$('impBtn').onclick = () => $('impFile').click();
+$('impFile').onchange = ev => {
+  const f = ev.target.files[0]; if (!f) return;
+  f.text().then(t => {
+    const d = JSON.parse(t);
+    if (!Array.isArray(d.events) || !Array.isArray(d.axes) || d.axes.length !== 3) throw new Error('形式が違います');
+    S.axes = d.axes; S.preset = d.preset || 'free';
+    S.events = d.events.map(e => ({ id: String(e.id), name: e.name || '', strength: ['A','B','C'].includes(e.strength) ? e.strength : 'C',
+      how: e.how || '', link: e.link || '', note: e.note || '', placed: !!e.placed,
+      p: (Array.isArray(e.p) && e.p.length === 3 ? e.p : [0,0,0]).map(v => Math.max(-1, Math.min(1, +v || 0))) }));
+    S.sel = S.events[0]?.id || null; save(); renderAll();
+  }).catch(err => alert('読み込めませんでした：' + err.message));
+  ev.target.value = '';
+};
+$('resetBtn').onclick = () => {
+  if (!confirm('置いた位置と書き足した事象をすべて消して、最初の状態に戻しますか。')) return;
+  S = seedState(); save(); renderAll();
+};
+
+function renderAll() { renderAxes(); renderEditor(); renderTable(); renderWhole(); turnsUI(); draw(); }
+
+window.addEventListener('resize', resize);
+renderAll();
+resize();
+})();
+</script>
+</body>
+</html>
