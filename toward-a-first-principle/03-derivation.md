@@ -85,7 +85,18 @@ $$2,\ 2,\ 4,\ 6,\ 10,\ 16,\ 26,\ 42,\ 68,\ 110,\ \dots$$
 | 条件3を符号の交互（π＝半回転）から導く | [B] 読み方の段階 |
 | 二つの螺旋の分かれ目が「待つか待たないか」 | [B] 候補 |
 
-## 7. 残る問い
+## 7. TTT-mathematics との関係
+
+[TTT-mathematics](https://github.com/kiki054-n/TTT-core/tree/main/TTT-mathematics) では、黄金比をすでに次のように導いている。
+
+| 文書 | 内容 | 本書との関係 |
+|---|---|---|
+| [公理化（第1版）](https://github.com/kiki054-n/TTT-core/blob/main/TTT-mathematics/Axiomatization%20of%206-Dimensional%20Equations%20(First%20Edition).md)・[golden_ratio_from_6d_equation.md](https://github.com/kiki054-n/TTT-core/blob/main/TTT-mathematics/golden_ratio_from_6d_equation.md) | 6次元 $(\mathbf r, \mathbf u)$ の比 $x=\lVert\mathbf r\rVert/\lVert\mathbf u\rVert$ に**公理6（自己相似条件）**を置き、$x = 1 + 1/x$ から $x=\varphi$ | 公理6は**置かれた**条件。本書は、生成の規則（条件1〜3）から同じ固定点方程式が**出てくる**ことを示す |
+| [fibonacci_and_6d_equation.md](https://github.com/kiki054-n/TTT-core/blob/main/TTT-mathematics/fibonacci_and_6d_equation.md) | フィボナッチ列は 6次元方程式の離散的近似列 | 本書は、その離散列が**なぜ**「前の二つを足す」になるかを与える |
+
+本書の条件3を符号の交互から導ければ、公理6は公理ではなく定理になる。
+
+## 8. 残る問い
 
 1. ×3 の列で、生まれた要素が「待たずにすぐ生める」のはなぜか。どちらの規則が働くかを決めるものは何か。
 2. 線の数の列 2, 2, 4, 6, 10, 16 … に、TTT の他の数（6、10＝8:2 など）が現れるのは偶然か。→ 証拠力はまだない。記録のみ。
