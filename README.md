@@ -140,12 +140,17 @@ JA0XUY-BPFF/
 │   ├── 2026-11-08-answer-is-not-the-answer.md  今出す答えは、答えじゃない（時間軸・境界・圧力34）
 │   ├── 2026-11-08-hinoki-y.md  卑猥なヒノキ ― 連想ゲームの夜（H・Y・オリオンと犬・誕生の10）
 │   └── 2026-11-09-new-moon-kepler.md  新月の夜に ― 星空に第一原理を探した人（ケプラーと正多面体、反例を残す）
+├── toward-a-first-principle/  第一原理への接近（2026-11-09〜、ネバーエンディングストーリー）
+│   ├── 00-prologue.md    序章：原理の一文、丸める、螺旋と黄金比、三者は閉じない
+│   ├── 01-compass.md     羅針盤：誰でも確かめられる事象の一覧（[A]・[B]・[C]）
+│   └── 02-plan.md        理解と運用の発展計画（螺旋の4巡）
 └── verify/
     ├── bpff_check.py         仮説1〜7の数値検証
     ├── bpff_boundary_w.py    境界層からの w₀・wₐ と DESI DR2 の比較
     ├── bpff_alpha_check.py   ε₀・μ₀ と α、1/α の式の照合
     ├── bpff_alpha_v5.py      V5 式の照合、偶然確率、108 の導出
-    └── bpff_sign_parity.py   符号の交互（積 (-1)^n）と半超立方体・正四面体
+    ├── bpff_sign_parity.py   符号の交互（積 (-1)^n）と半超立方体・正四面体
+    └── fp_compass_check.py   序章の数の主張（黄金比・連分数・二つの螺旋・3³+4³+5³=6³・666）
 ```
 
 ---
