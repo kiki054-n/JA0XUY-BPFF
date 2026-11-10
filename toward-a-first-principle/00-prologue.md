@@ -177,6 +177,7 @@ $$\varphi = 1 + \cfrac{1}{1 + \cfrac{1}{1 + \cfrac{1}{1 + \cdots}}}$$
 7. 数の主張の検算 → [`verify/fp_compass_check.py`](../verify/fp_compass_check.py)
 8. 第2巡その1：「前の二つを足す」の導出 → [`03-derivation.md`](03-derivation.md)
 9. 第2巡その2：双極・XYZ・FBI・回す三つの関係 → [`04-relations.md`](04-relations.md)
+10. 第2巡その3：波と粒子 ― 一つの BPFF を二つの側から見る → [`05-wave-particle.md`](05-wave-particle.md)
 
 ---
 
