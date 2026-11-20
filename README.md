@@ -150,7 +150,8 @@ JA0XUY-BPFF/
 │   ├── 01-compass.md     羅針盤：誰でも確かめられる事象の一覧（[A]・[B]・[C]）
 │   ├── 02-plan.md        理解と運用の発展計画（螺旋の4巡）
 │   ├── 03-derivation.md  第2巡その1：「前の二つを足す」を双極の公理から導く
-│   └── 04-relations.md   第2巡その2：双極・XYZ・FBI・回す三つの関係（立方体1個から数える）
+│   ├── 04-relations.md   第2巡その2：双極・XYZ・FBI・回す三つの関係（立方体1個から数える）
+│   └── 05-wave-particle.md  第2巡その3：波と粒子（一つの BPFF を OOπO と ππOπ の二つの側から見る、D²＋V²＝1）
 └── verify/
     ├── bpff_check.py         仮説1〜7の数値検証
     ├── bpff_boundary_w.py    境界層からの w₀・wₐ と DESI DR2 の比較
@@ -159,7 +160,8 @@ JA0XUY-BPFF/
     ├── bpff_sign_parity.py   符号の交互（積 (-1)^n）と半超立方体・正四面体
     ├── fp_compass_check.py   序章の数の主張（黄金比・連分数・二つの螺旋・3³+4³+5³=6³・666）
     ├── fp_fibonacci_derivation.py  「前の二つを足す」の導出と二つの螺旋の分かれ目
-    └── fp_relations_check.py  双極・XYZ・FBI・回す三つの関係（回転軸7本、半回転と四元数、双対、3で回る算術、2³+1=3²）
+    ├── fp_relations_check.py  双極・XYZ・FBI・回す三つの関係（回転軸7本、半回転と四元数、双対、3で回る算術、2³+1=3²）
+    └── fp_wave_particle_check.py  波と粒子（D²＋V²＝1、位置を絞る代償 381 eV）
 ```
 
 ---
