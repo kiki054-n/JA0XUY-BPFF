@@ -151,7 +151,11 @@ JA0XUY-BPFF/
 │   ├── 02-plan.md        理解と運用の発展計画（螺旋の4巡）
 │   ├── 03-derivation.md  第2巡その1：「前の二つを足す」を双極の公理から導く
 │   ├── 04-relations.md   第2巡その2：双極・XYZ・FBI・回す三つの関係（立方体1個から数える）
-│   └── 05-wave-particle.md  第2巡その3：波と粒子（一つの BPFF を OOπO と ππOπ の二つの側から見る、D²＋V²＝1）
+│   ├── 05-wave-particle.md  第2巡その3：波と粒子（一つの BPFF を OOπO と ππOπ の二つの側から見る、D²＋V²＝1）
+│   └── 06-no-side.md     第3巡その1：勝負の第一原理とノーサイド（戦争・核・法は永遠に完成しない・ICC）
+├── ledger/               矛盾台帳（各国の「見る位置」を出典つきで並べる、2026-11-22〜）
+│   ├── README.md
+│   └── contradiction-ledger.csv
 └── verify/
     ├── bpff_check.py         仮説1〜7の数値検証
     ├── bpff_boundary_w.py    境界層からの w₀・wₐ と DESI DR2 の比較
