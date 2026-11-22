@@ -33,3 +33,21 @@ print("正六角形の点の数:", len(ring), " 半径:", radii, " 角度:", ang
 ok = total == [0, 0, 0] and len(center) == 2 and len(ring) == 6 and len(radii) == 1 \
     and all(abs((angles[i + 1] - angles[i]) - 60) < 0.2 for i in range(5))
 print("判定:", "一致（正六角形 6 ＋ 中心 2）" if ok else "不一致")
+
+
+# ---------------------------------------------------------------
+# 中心と見えない相手：メタン（正四面体の 4 本の F）
+# ---------------------------------------------------------------
+tet = [(1, 1, 1), (1, -1, -1), (-1, 1, -1), (-1, -1, 1)]
+norm = math.sqrt(3)
+u = [[c / norm for c in v] for v in tet]
+print()
+print("メタン（正四面体）の F 4 本の総和:", [sum(v[i] for v in tet) for i in range(3)])
+cosang = sum(a * b for a, b in zip(u[0], u[1]))
+print(f"F どうしの角: {math.degrees(math.acos(cosang)):.2f} 度  cos = {cosang:+.4f}")
+proj = sum(sum(a * b for a, b in zip(u[0], u[k])) for k in (1, 2, 3))
+print(f"F1 の向きでの、見えない相手 3 本の成分の和: {proj:+.4f}  （-1 になれば F1 とつり合う）")
+
+# 8 本の場合：各 F に対し残り 7 本の和がちょうど反対向きになる
+ok8 = all([sum(w[i] for w in vecs if w != v) for i in range(3)] == [-c for c in v] for v in vecs)
+print("正8面体の 8 本：どの F も残り 7 本の和でちょうど打ち消される:", ok8)
