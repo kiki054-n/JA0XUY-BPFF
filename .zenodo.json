@@ -1,0 +1,34 @@
+{
+  "title": "勝負の第一原理とノーサイド ― 戦争・核・法は永遠に完成しない（JA0XUY-BPFF, Toward a First Principle 第3巡その1）／The First Principle of Contest and No-Side: War, Nuclear Weapons, and the Never-Completed Law",
+  "upload_type": "publication",
+  "publication_type": "workingpaper",
+  "description": "<p>勝負を最小の4要素（当事者・両立しない結果・判定基準・有限の資源）に分解し、終わりの原理としてノーサイドを導く作業仮説。ノーサイドに戻る3条件（終わりの承認・分かれる理由の消滅・サイドの一時性）で戦争・原爆の死者・米中ロ協議を診断し、「法は永遠に完成しない」を第一原理として提案する。悪用を防ぐ一線として「未完成であることは、無効であることではない」を置く。各国の見る位置を出典つきで並べる矛盾台帳（初版）を含む。</p><p>A working hypothesis decomposing contest into four minimal elements and deriving 'no-side' as its closing principle; applies three conditions for returning to no-side to wars, the atomic-bomb dead, and the 2026 US-China-Russia talks; proposes that law is never completed as a first principle, with the safeguard that incompleteness is not invalidity. Includes an initial sourced contradiction ledger.</p>",
+  "creators": [
+    {
+      "name": "Kawakami, Naoyuki",
+      "orcid": "0009-0009-2972-6511",
+      "affiliation": "Team Shiojiri / Cooperate Craft Wine Makers"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Claude (Anthropic)",
+      "type": "Other"
+    }
+  ],
+  "keywords": ["first principle", "no-side", "contest", "war", "nuclear weapons", "rule of law", "ICC", "TTT", "BPFF", "ノーサイド", "第一原理"],
+  "license": "mit",
+  "language": "jpn",
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.19704117",
+      "relation": "isContinuationOf",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "https://github.com/kiki054-n/JA0XUY-BPFF",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}
