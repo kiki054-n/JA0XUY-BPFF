@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "このリポジトリを引用する場合は、以下の情報を使ってください。"
+title: "JA0XUY-BPFF: 勝負の第一原理とノーサイド ― 戦争・核・法は永遠に完成しない"
+version: "v0.6-no-side"
+date-released: 2026-11-22
+authors:
+  - family-names: "Kawakami"
+    given-names: "Naoyuki"
+    orcid: "https://orcid.org/0009-0009-2972-6511"
+    affiliation: "Team Shiojiri / Cooperate Craft Wine Makers"
+license: MIT
+repository-code: "https://github.com/kiki054-n/JA0XUY-BPFF"
+keywords:
+  - first principle
+  - no-side
+  - rule of law
+  - nuclear weapons
+  - TTT
+  - BPFF
