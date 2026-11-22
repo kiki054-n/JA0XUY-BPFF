@@ -159,6 +159,7 @@ JA0XUY-BPFF/
 └── verify/
     ├── bpff_check.py         仮説1〜7の数値検証
     ├── bpff_sqrtN_lambda.py  √N の道（H6'）：Λ の桁 10⁻¹²³ の導出
+    ├── bpff_gluon_octahedron.py  H15 グルーオンと正8面体（総和0、八重項の配置）
     ├── bpff_boundary_w.py    境界層からの w₀・wₐ と DESI DR2 の比較
     ├── bpff_alpha_check.py   ε₀・μ₀ と α、1/α の式の照合
     ├── bpff_alpha_v5.py      V5 式の照合、偶然確率、108 の導出
